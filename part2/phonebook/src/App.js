@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/filter'
 import PersonForm from './components/personform'
 import Persons from './components/persons'
+import personService from './services/persons'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -13,23 +14,18 @@ const App = () => {
 
   /// Fetching data
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
 
-  /// Handle add a new person to list
+  /// Adding a new person to the database list
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.find(person => person.name == newName)) {
-      window.alert(`${newName} is already added to phonebook`)
-    } 
-    else if (!/\S/.test(newName)) {
+    const index = persons.findIndex(p => p.name.toLowerCase() == newName.toLocaleLowerCase())
+    if (!/\S/.test(newName)) {
       // If text field is empty
       window.alert('Please add a name') 
     } 
@@ -37,15 +33,37 @@ const App = () => {
       // If text field is empty
       window.alert('Please add a phone number') 
     } 
-    else
-    {
+    else if (index !== -1) {
+      const result = window.confirm(`${persons[index].name} is already added to phonebook, replace the old number with a new one?`)
+      if (result) {
+        const personObj = {
+          name: persons[index].name,
+          number: newNumber
+        }
+        personService
+          .update(persons[index].id, personObj)
+          .then(updatedPerson => {            
+            let newList = [...persons]
+            newList[index] = {...newList[index], number: updatedPerson.number}
+            setPersons(newList)
+            setNewName('')
+            setNewNumber('')
+          })
+        
+      }
+    }
+    else{
       const personObj = {
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(personObj))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .addPerson(personObj)
+        .then(personList => {
+          setPersons(persons.concat(personList))
+          setNewName('')
+          setNewNumber('')
+        })      
     }    
   }
 
@@ -86,7 +104,7 @@ const App = () => {
         handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       
       <h3>Numbers</h3>
-      <Persons persons={personsToShow}/>      
+      <Persons persons={personsToShow} setPersons={setPersons}/>      
     </div>
   )
 }

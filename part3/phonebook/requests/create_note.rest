@@ -1,0 +1,28 @@
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "content": "VS Test",
+    "important": false
+}
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "Tala Test",
+    "important": false
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Elino Elon",
+    "number": "03-49-3256328"
+}
+
+###
+DELETE http://localhost:3001/api/persons/6

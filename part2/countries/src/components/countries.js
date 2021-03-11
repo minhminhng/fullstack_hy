@@ -38,27 +38,7 @@ const Weather = ( {city, temperature, icon, wind_speed, wind_dir } ) => {
 
 // Country information component
 const CountryInfor = ( {country} ) => {
-    const [ weather, setWeather ] = useState({})
-    const [ loc, setLocation ] = useState('')
-
-    const params = {
-        access_key: 'a54dd213ab1ee86de093d4a13ae12358',
-        query: country.name
-    }
-    console.log('url  http://api.weatherstack.com/current', {params})
-      
-    /// Fetching data
-    axios
-      .get(`http://api.weatherstack.com/current?access_key=${params.access_key}&query=${country.name}`)
-      .then(response => {
-          const apiResponse = response.data.location.name
-          console.log(apiResponse)
-          setLocation(apiResponse)
-          console.log(loc)
-        //setWeather(apiResponse)
-        
-      })
-
+    
     return (
         <div>
             <div>capital {country.capital}</div>
@@ -79,11 +59,33 @@ const CountryInfor = ( {country} ) => {
 const Countries = ( props ) => {
     const countries = props.countries 
     const [ selected, setSelect] = useState()
+    const [ weather, setWeather ] = useState({})
+    const [ loc, setLocation ] = useState()
 
     // Handle clicking button show
     const handleShowClick = (name) => {
         props.showChange(true) // change the state on the parent
-        setSelect(countries.find(country => country.name === name))  
+        setSelect(countries.find(country => country.name === name))
+        const params = {
+            access_key: 'a54dd213ab1ee86de093d4a13ae12358',
+            query: country.name.replace(/\s/g, '')
+        }
+        console.log(country.name.replace(/\s/g, ''))
+        console.log('url  http://api.weatherstack.com/current', {params})
+          
+        /// Fetching data
+        axios
+          .get(`http://api.weatherstack.com/current?access_key=${params.access_key}&query=${country.name.replace(/\s/g, '')}`)
+          .then(response => {
+              console.log(response.data)
+              console.log(response.data.location.name)
+              setLocation(response.data.location.name)
+              console.log(loc)
+              console.log(response.data.current)
+              setWeather(response.data.current)
+              console.log(weather)
+            
+          })
     }
     
     if (countries.length > 10) {

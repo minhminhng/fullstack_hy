@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React from 'react'
 import personService from '../services/persons'
 
@@ -14,7 +13,7 @@ const Person = ( {name, number, delPerson, label} ) => {
 }
 
 // List of persons
-const Persons = ( {persons, setPersons} ) => {
+const Persons = ( {persons, setPersons, msg, setMsg} ) => {
     const deletePerson = (id) => {
       const remainedPersons = persons.filter(p => p.id !== id)
       const person = persons.find(p => p.id === id)
@@ -22,8 +21,17 @@ const Persons = ( {persons, setPersons} ) => {
       if (result) {
         personService
           .deletePerson(id)
+          .then(response => {
+            setMsg([0,`Deleted ${person.name} from the list`])
+            setTimeout(() => {
+              setMsg(null)
+            }, 3000)
+          })
           .catch(error => {
-            alert(``)
+            setMsg([1,`${person.name} no longer exists`])
+            setTimeout(() => {
+              setMsg(null)
+            }, 3000)
           })
         setPersons(remainedPersons)        
       }

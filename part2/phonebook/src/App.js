@@ -1,9 +1,9 @@
-import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import Filter from './components/filter'
 import PersonForm from './components/personform'
 import Persons from './components/persons'
 import personService from './services/persons'
+import Notification from './components/notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -11,6 +11,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setFilter ] = useState('')
   const [ showAll, setShowAll ] = useState(true)
+  const [ msg, setMsg ] = useState(null)
 
   /// Fetching data
   useEffect(() => {
@@ -48,8 +49,17 @@ const App = () => {
             setPersons(newList)
             setNewName('')
             setNewNumber('')
+            setMsg(`Updated phone number for ${updatedPerson.name}`)
+            setTimeout(() => {
+              setMsg(null)
+            }, 5000)
           })
-        
+          .catch(error => {
+            setMsg([1,`${persons[index].name} no longer exists`])
+            setTimeout(() => {
+              setMsg(null)
+            }, 3000)
+          }) 
       }
     }
     else{
@@ -59,17 +69,22 @@ const App = () => {
       }
       personService
         .addPerson(personObj)
-        .then(personList => {
-          setPersons(persons.concat(personList))
+        .then(addedPerson => {
+          setPersons(persons.concat(addedPerson))
           setNewName('')
           setNewNumber('')
+          setMsg([0,`Added ${addedPerson.name} to the list`])
+          setTimeout(() => {
+            setMsg(null)
+          }, 5000)
         })      
     }    
   }
 
   // Handler when name field changed
   const handleNameChange = (event) => {
-    setNewName(event.target.value)  
+    setNewName(event.target.value)
+    const index = persons.findIndex(p => p.name.toLowerCase() == newName.toLocaleLowerCase())
   }
   
   /// Handler when number field changed
@@ -97,6 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={msg} />
       <Filter filterName={filterName} value={newFilter} handleFilterChange={handleFilterChange} />
       <h3>add a new</h3>
       
@@ -104,7 +120,7 @@ const App = () => {
         handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} setPersons={setPersons}/>      
+      <Persons persons={personsToShow} setPersons={setPersons} msg={msg} setMsg={setMsg}/>      
     </div>
   )
 }

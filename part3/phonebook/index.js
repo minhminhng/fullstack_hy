@@ -1,35 +1,38 @@
 require('dotenv').config()
-const { json } = require('express')
 const express = require('express')
-const { format } = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
 const app = express()
 
-app.use(express.json()) // Activate json-parser
 app.use(express.static('build'))
+app.use(express.json()) // Activate json-parser
 app.use(cors())
 
-const morgan = require('morgan')
-morgan.token('data', (req, res) => {
-  if (req.method === "POST")
-    return JSON.stringify(req.body)
-  else
-    return JSON.stringify()
-})
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id'})
+  }
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error:error.message })
+  }
+  next(error)
+}
 
-
+//----- HTTP -----
 // Get root
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
- })
+})
 
 // Get info
-app.get('/info', (request, response) => {
-  response.send(`<p>Phonebook has info for ${persons.length} people.</p>
+app.get('/info', (request, response, next) => {
+  Person.countDocuments().then(result => {
+    response.send(`<p>Phonebook has info for ${result} people.</p>
     <p>${Date()}</p>`)
+  })
+    .catch(error => next(error)) 
 })
 
 // Get persons
@@ -40,8 +43,7 @@ app.get('/api/persons', (request, response) => {
 })
 
 // Get person with id
-app.get('/api/persons/:id', (request, response) => {
-
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if (person) {
@@ -51,41 +53,19 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
       }  
     })
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({ error: 'malformatted id'})
-    })
+    .catch(error => next(error)) // Middleware
 })
 
 // Delete person with id
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
-
-  response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(response.status(204).end())
+    .catch(error => next(error))
 })
 
-// Generate a random ID
-const generateId = (max) => {
-  const id = Math.floor(Math.random() * Math.floor(max))
-  return id
-}
-
-// Post request
-app.post('/api/persons', (request, response) => {
+// Post request - Add person to the database
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
-
-  if (!body.name) {
-    return response.status(400).json({ 
-      error: 'name missing' 
-    })
-  }
-
-  if (!body.number) {
-    return response.status(400).json({ 
-      error: 'number missing' 
-    })
-  }
 
   // const ind = persons.findIndex(person => 
   //   person.name.toLowerCase() === body.name.toLowerCase())
@@ -104,9 +84,44 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+    .catch(error => next(error))
+})
+
+// Put request - Update data
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true } )
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+//----- Middlewares -----
+const morgan = require('morgan')
+morgan.token('data', (req, res) => {
+  if (req.method === 'POST')
+    return JSON.stringify(req.body)
+  else
+    return JSON.stringify()
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
+app.use(errorHandler)

@@ -29,9 +29,18 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Amanda Spencer",
-    "number": "050-38-2476"
+    "name":"Maza Edison",
+    "number": "050-38-3689"
 }
 
 ###
-DELETE http://localhost:3001/api/persons/6
+DELETE http://localhost:3001/api/persons/604a010cd94f93258cb0ba82
+
+###
+PUT http://localhost:3001/api/persons/604a00abb561a60d44c20d6c
+Content-Type: application/json
+
+{
+    "name": "Mimi",
+    "number": "015-58-92894"
+}

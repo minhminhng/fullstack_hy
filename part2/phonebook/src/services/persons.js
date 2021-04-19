@@ -14,7 +14,7 @@ const addPerson = personObj => {
 }
 
 const deletePerson = (id) => {
-    console.log(`deleting ${baseUrl}/r${id}...`)
+    console.log(`deleting ${baseUrl}/${id}...`)
     const request = axios.delete(`${baseUrl}/${id}`)
     return request.then(response => response.data)
 }

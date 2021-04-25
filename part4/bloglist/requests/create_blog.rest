@@ -1,0 +1,31 @@
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+
+{
+    "title":"Giang oi",
+    "author":"Tran Thi Thu Giang",
+    "url":"https://giangoi.com/blog/",
+    "likes":10000
+}
+
+###
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+
+{
+    "title":"Savoury days",
+    "author":"Linh Trang",
+    "url":"http://www.savourydays.com/",
+    "likes":100
+}
+
+###
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+
+{
+    "title":"Wb Desginer Depot",
+    "author":"Unknown",
+    "url":"https://www.webdesignerdepot.com/",
+    "likes":1000
+}

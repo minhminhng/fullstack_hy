@@ -8,6 +8,9 @@ node_modules/
 dist/
 build/
 
+# environmetal
+/.env
+
 # Compiled Java class files
 *.class
 

@@ -1,0 +1,31 @@
+POST http://localhost:3003/api/users/
+Content-Type: application/json
+
+{
+    "notes":[],
+    "username": "root",
+    "name":"Superuser",
+    "password": "password"
+}
+
+###
+POST http://localhost:3003/api/users/
+Content-Type: application/json
+
+{
+    "notes":[],
+    "username": "ming",
+    "name":"Mi Ng",
+    "password": "password"
+}
+
+###
+POST http://localhost:3003/api/users/
+Content-Type: application/json
+
+{
+    "notes":[],
+    "username": "root",
+    "name":"Superuser",
+    "password": "password"
+}

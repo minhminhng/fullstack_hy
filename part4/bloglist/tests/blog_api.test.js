@@ -126,11 +126,14 @@ describe('when there is initially some notes saved', () => {
 
   describe('addition of a new blog', () => {
     test('a valid blog can be added', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+
       const newBlog = {
         title: "Hallo makeup",
-        author: "Oma Phan",
+        author: "Michael Chan",
         url: "https://fullstackopen.com/en/part4/testing_the_backend#exercises-4-8-4-12",
-        likes: 7
+        likes: 7,
+        userId: "6086acdbb577aa50c0c54120"        
       }
     
       await api
@@ -239,6 +242,35 @@ describe('when there is initially one user in db', () => {
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+})
+
+describe('test with user', () => {
+  test('add blog with user', async () => {
+    const usersAtStart = await helper.usersInDb()
+    console.log(usersAtStart)
+
+    const newBlog = {
+      title: "Hkeup",
+      author: "Michael Chan",
+      url: "https://fullstackopen.com/en/part4/testing_the_backend#exercises-4-8-4-12",
+      likes: 70,
+      userId: usersAtStart[0].id
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+    
+      const blogAtEnd = await helper.blogsInDb()
+      expect(blogAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+    
+      const contents = blogAtEnd.map(r => r.title)
+      expect(contents).toContain(
+        "Hkeup"
+      )
   })
 })
 

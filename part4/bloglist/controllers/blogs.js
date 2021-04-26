@@ -2,17 +2,28 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
-
 blogsRouter.get('/', async(request, response) => {
     const blogs = await Blog.find({})  
     response.json(blogs)
 })
   
-
 blogsRouter.post('/', async(request, response, next) => {
-    const blog = new Blog(request.body)
+    const body = request.body
+
+    const user = await User.findById(body.userId)
+
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes === undefined ? 0 : body.likes,
+      user: user._id
+    })
+
     try {
       const savedBlog = await blog.save()
+      user.blogs = user.blogs.concat(savedBlog._id)
+      await user.save()
       response.json(savedBlog)
     } catch (exception) {
       next(exception)
@@ -41,7 +52,7 @@ blogsRouter.put('/:id', async(request, response, next) => {
   const blog = new Blog(request.body)  
   
   try {    
-    console.log(blog)
+    
     // have to write the parameters of the body explicitly, otherwise, the update include _id
     // and will throw an exception for immutable _id
     // Option 1
@@ -62,9 +73,9 @@ blogsRouter.put('/:id', async(request, response, next) => {
     //   } 
     // })  
     response.json(updatedBlog)
-    console.log(updatedBlog)
+    
   } catch (exception){
-      console.log(exception)
+    
       next(exception)
   }   
    

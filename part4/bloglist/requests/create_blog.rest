@@ -1,11 +1,25 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYW5nb2kiLCJpZCI6IjYwODdlMGQwNmQ2MGQzMDdmMDcxYjI0MCIsImlhdCI6MTYxOTUyMTA4M30.LJNQwJr6BQ9EpPg3ey9nge3dlFH4lo8v_Ni5p7zZNHI
 
 {
-    "title":"Giang oi",
+    "title":"Co em doi bong vui",
     "author":"Tran Thi Thu Giang",
     "url":"https://giangoi.com/blog/",
-    "likes":10000
+    "likes":1000,
+    "userId": "6087e0d06d60d307f071b240"
+}
+
+###
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+
+{
+    "title":"Co em doi bong vui",
+    "author":"Tran Thi Thu Giang",
+    "url":"https://giangoi.com/blog/",
+    "likes":10000,
+    "userId": "6087e0d06d60d307f071b240"
 }
 
 ###

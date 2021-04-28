@@ -189,7 +189,7 @@ describe('when there is initially some notes saved', () => {
 // If this part is written in a separated test file, console will show 
 // ReferenceError: You are trying to `import` a file after the Jest environment has been torn down
 
-describe('when there is initially one user in db', () => {
+describe('users in db', () => {
   beforeEach(async() => {
     await User.deleteMany({})
 
@@ -202,7 +202,6 @@ describe('when there is initially one user in db', () => {
 
   test('creation succeeds with a fresh username', async() => {
     const usersAtStart = await helper.usersInDb()
-    // console.log(usersAtStart)
 
     const newUser = {
       username: 'malatha',
@@ -210,7 +209,7 @@ describe('when there is initially one user in db', () => {
       password: 'matkhau'
     }
 
-    await api
+    const result = await api
       .post('/api/users')
       .send(newUser)
       .expect(200)
@@ -239,6 +238,48 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(result.body.error).toContain('`username` to be unique')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creation fails when username is too short', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'mi',
+      name: 'HoHoHaHa',
+      password: 'sala',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('username must include at least 3 characters')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creation fails when password is too short', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'nangtho',
+      name: 'Gao Ng',
+      password: 'pa',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+    expect(result.body.error).toContain('password must include at least 3 characters')
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)

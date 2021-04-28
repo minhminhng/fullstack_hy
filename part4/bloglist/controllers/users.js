@@ -5,6 +5,18 @@ const User = require('../models/user')
 usersRouter.post('/', async(request, response) =>{
     const body = request.body
 
+    if (body.username.length < 3) {
+        return response.status(400).json({
+        error: 'username must include at least 3 characters'
+      })
+    }
+
+    if (body.password.length < 3) {
+        return response.status(400).json({
+        error: 'password must include at least 3 characters'
+      })
+    }
+
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
@@ -14,9 +26,17 @@ usersRouter.post('/', async(request, response) =>{
         passwordHash,
     })
 
+    
     const savedUser = await user.save()
-
     response.json(savedUser)
+    // try and catch works if not express-async-error is not installed
+    // try {
+    // } catch(exception) {  
+    //     console.log(exception) 
+    //     next(exception)  
+    //     return response.status(400).json({ error: exception.message })
+        
+    // }
 })
 
 usersRouter.get('/', async(request, response) => {

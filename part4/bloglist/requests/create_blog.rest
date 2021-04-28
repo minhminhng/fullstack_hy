@@ -1,13 +1,13 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYW5nb2kiLCJpZCI6IjYwODdlMGQwNmQ2MGQzMDdmMDcxYjI0MCIsImlhdCI6MTYxOTUyMTA4M30.LJNQwJr6BQ9EpPg3ey9nge3dlFH4lo8v_Ni5p7zZNHI
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYW5nb2kiLCJpZCI6IjYwODdlMGQwNmQ2MGQzMDdmMDcxYjI0MCIsImlhdCI6MTYxOTU5NjY2MCwiZXhwIjoxNjE5NjAwMjYwfQ.sGHSDeSQMe-bDu5riw4DvhxmoKAaLHe9X8tK4jIT77E
 
 {
-    "title":"Co em doi bong vui",
-    "author":"Tran Thi Thu Giang",
+    "title":"Nhat ky hoc nghe",
+    "author":"Linh Trang",
     "url":"https://giangoi.com/blog/",
-    "likes":1000,
-    "userId": "6087e0d06d60d307f071b240"
+    "likes":500,
+    "userId": "607d3cff11d3522dec3ea8d6"
 }
 
 ###

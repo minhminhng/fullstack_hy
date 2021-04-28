@@ -189,7 +189,7 @@ describe('when there is initially some notes saved', () => {
 // If this part is written in a separated test file, console will show 
 // ReferenceError: You are trying to `import` a file after the Jest environment has been torn down
 
-describe('users in db', () => {
+describe('test with users', () => {
   beforeEach(async() => {
     await User.deleteMany({})
 
@@ -286,11 +286,32 @@ describe('users in db', () => {
   })
 })
 
-describe('test with user', () => {
-  
-  test('add blog with user', async () => {
+describe('blog with user', () => {
+  beforeEach(async() => {
+    await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    let passwordHash = await bcrypt.hash('langthang', 10)
+    let user = new User({ username: 'malatha', passwordHash })
+    await user.save()
+    passwordHash = await bcrypt.hash('bimat', 10)
+    user = new User({ username: 'thotho', passwordHash })
+    await user.save()    
+  })
+
+  test('add blog from user', async() => {
     const usersAtStart = await helper.usersInDb()
-    console.log(usersAtStart)
+    const user = {
+      username: 'malatha',
+      password: 'langthang',
+    }
+    const result = await api
+      .post('/api/login')
+      .send(user)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const token = result.body.token
 
     const newBlog = {
       title: "Hkeup",
@@ -300,20 +321,53 @@ describe('test with user', () => {
       userId: usersAtStart[0].id
     }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+    const addedBlog = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send(newBlog)        
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(1)
     
-      const blogAtEnd = await helper.blogsInDb()
-      expect(blogAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-    
-      const contents = blogAtEnd.map(r => r.title)
-      expect(contents).toContain(
-        "Hkeup"
-      )
+    const contents = blogsAtEnd.map(r => r.title)
+    expect(contents).toContain("Hkeup")
   })
+
+  test('add blog from unauthorized user', async() => {
+    const usersAtStart = await helper.usersInDb()
+    const user = {
+      username: 'thotho',
+      password: 'bimat',
+    }
+    const result = await api
+      .post('/api/login')
+      .send(user)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const token = result.body.token
+
+    const newBlog = {
+      title: "Hkeup",
+      author: "Michael Chan",
+      url: "https://fullstackopen.com/en/part4/testing_the_backend#exercises-4-8-4-12",
+      likes: 70,
+      userId: usersAtStart[0].id
+    }
+
+    const addedBlog = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send(newBlog)        
+      .expect(401)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(0)    
+  })
+
+
 })
 
 afterAll(() => {

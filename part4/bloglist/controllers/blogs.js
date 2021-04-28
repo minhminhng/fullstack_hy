@@ -2,6 +2,7 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('/', async(request, response) => {
     const blogs = await Blog.find({}).populate('user', { username:1, name:1 })  
@@ -16,15 +17,19 @@ const getTokenFrom = request => {
   return null
 }
 
-blogsRouter.post('/', async(request, response, next) => {
+blogsRouter.post('/', userExtractor, async(request, response, next) => {
     const body = request.body
-  
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!request.token || ! decodedToken.id) {
+
+    // const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!request.token || !request.user) {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
 
-    const user = await User.findById(decodedToken.id)
+    if (body.userId != request.user) {
+      return response.status(401).json({ error: 'wrong user'})
+    }
+
+    const user = await User.findById(request.user)
     
 
     const blog = new Blog({
@@ -58,16 +63,26 @@ blogsRouter.get('/:id', async(request, response, next) => {
   }
 })
 
-blogsRouter.delete('/:id', async(request, response) => {
-    await Blog.findByIdAndRemove(request.params.id)      
-    response.status(204).end()
+blogsRouter.delete('/:id', userExtractor, async(request, response) => {
+    const blog = await Blog.findById(request.params.id)
+
+    if (blog === null) {
+      return response.status(204).end()
+    }
+
+    if (blog.user.toString() === request.user) {
+      await Blog.findByIdAndRemove(request.params.id)      
+      response.status(204).end()
+    } else {
+      console.log('wrong user')
+      return response.status(403).json({ error: 'wrong user'})
+    }
 })
 
-blogsRouter.put('/:id', async(request, response, next) => {
+blogsRouter.put('/:id', userExtractor, async(request, response, next) => {
   const blog = new Blog(request.body)  
   
-  try {    
-    
+  try {     
     // have to write the parameters of the body explicitly, otherwise, the update include _id
     // and will throw an exception for immutable _id
     // Option 1

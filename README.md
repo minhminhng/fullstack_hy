@@ -1,14 +1,12 @@
-# README #
+# [FullStack Open](https://fullstackopen.com/en/)
 
-This README would normally document whatever steps are necessary to get your application up and running.
+### Content ###
 
-### What is this repository for? ###
-
-* Quick summary
+* [Completion](#completion)
 * Version
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-### How do I get set up? ###
+### <a name="completion">Completion</a>
 
 * Summary of set up
 * Configuration

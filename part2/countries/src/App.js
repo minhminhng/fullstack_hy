@@ -8,7 +8,7 @@ const App = () => {
   const [ newFilter, setFilter ] = useState('')
   const [ show, setShow ] = useState(false)
 
-  /// Fetching data
+  /// Fetch data
   useEffect(() => {
     // console.log('countries effect')
     axios

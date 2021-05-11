@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import BtnShow from './showbutton'
+import BtnShow from './Showbutton'
 import axios from 'axios'
 
 // Country name component
@@ -23,14 +23,14 @@ const Languages = ( {languages} ) => {
 }
 
 // Flag component
-const Flag = ( {flag} ) => <img src={flag} width="200"/>
+const Flag = ( {country} ) => <img src={country.flag} alt={country.name} width="200"/>
 
-const Weather = ( {city, temperature, icon, wind_speed, wind_dir } ) => {
+const Weather = ( {city, temperature, icon, description, wind_speed, wind_dir } ) => {
     return (
         <div>
             <h2>Weather in {city}</h2>
-            <div><b>temperature</b> {temperature}</div>
-            <img src={icon} />
+            <div><b>temperature</b> {temperature} &#8451;</div>
+            <img src={icon} alt={description}/>
             <div><b>wind</b> {wind_speed} mph direction {wind_dir}</div>
         </div>
     )
@@ -43,12 +43,13 @@ const CountryInfor = ( {country, city, weather} ) => {
         <div>
             <div>capital {country.capital}</div>
             <div>population {country.population}</div>
-            <h2>languages</h2>
+            <h2>Spoken languages</h2>
             <Languages languages={country.languages} />
-            <Flag flag={country.flag} />
+            <Flag country={country} />
             <Weather city={city} 
                 temperature={weather.temperature} 
                 icon={weather.weather_icons}
+                description={weather.weather_descriptions}
                 wind_speed={weather.wind_speed}
                 wind_dir={weather.wind_dir} />
         </div>
@@ -76,23 +77,24 @@ const Countries = ( props ) => {
                 query: name.replace(/\s/g, '')
             }
             axios
-              .get(`http://api.weatherstack.com/current?access_key=${params.access_key}&query=${name.replace(/\s/g, '')}`)
+            //   .get(`http://api.weatherstack.com/current?${params}`)
+              .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${name.replace(/\s/g, '')}`)
               .then(response => {
                 //   console.log(response.data)
-                //   console.log(response.data.location.name)
+                // console.log(response.data.location.name)
               setLocation(response.data.location.name)
-                //   console.log(response.data.current)
+              console.log(response.data.current)
               setWeather(response.data.current)            
             })
             props.showChange(true) // set show after set the country otherwise, selectedCountry is not defined for the 1st run
         }              
     }, [selectedCountry])
     
-    if (countryList.length === 1) {       
-        console.log(countryList[0])
-        // setSelect(countryList[0])    
-            // return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
-    }
+    // if (countryList.length === 1) {       
+    //     console.log(countryList[0])
+    //     setSelect(countryList[0])    
+    //         // return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
+    // }
 
     const countries = props.show 
         ? selectedCountry

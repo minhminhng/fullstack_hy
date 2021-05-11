@@ -5,7 +5,6 @@ import Filter from './components/Filter'
 
 const App = () => {
   const [ countries, setCountries ] = useState([])
-  const [ selectedCountry, setSelect ] = useState({})
   const [ newFilter, setFilter ] = useState('')
   const [ show, setShow ] = useState(false)
 
@@ -32,20 +31,14 @@ const App = () => {
     setShow(true)  
   }
 
-  const handleSelectedChange = (value) => {
-    setSelect(value)
-  }
-
-  const countriesToShow = show 
-    ? selectedCountry
-    : countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))
+  const countriesToShow = countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))
 
   return (
     
     <div>
-      <h2>Countries</h2>
+      <h1>Countries</h1>
       <Filter value={newFilter} handleFilterChange={handleFilterChange} />     
-      <Countries countries={countriesToShow} showChange={handleShowChange} show={show} selected={selectedCountry} selectChange={handleSelectedChange} />      
+      <Countries countries={countriesToShow} showChange={handleShowChange} show={show} />      
     </div>
   )
 }

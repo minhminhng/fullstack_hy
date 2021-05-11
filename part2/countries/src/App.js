@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
-import Countries from './components/Countries'
-import Filter from './components/Filter'
+import Countries from './components/countries'
+import Filter from './components/filter'
 
 const App = () => {
   const [ countries, setCountries ] = useState([])
@@ -42,6 +42,5 @@ const App = () => {
     </div>
   )
 }
-
 
 export default App

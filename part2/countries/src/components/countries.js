@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import BtnShow from './Showbutton'
+import BtnShow from './showbutton'
 import axios from 'axios'
 
 // Country name component

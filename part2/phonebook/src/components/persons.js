@@ -2,12 +2,12 @@ import React from 'react'
 import personService from '../services/persons'
 
 // Person name component
-const Person = ( {name, number, delPerson, label} ) => {
+const Person = ( {name, number, onDelete, label} ) => {
 
   return (
     <tr>
       <td>{name}</td><td>{number}</td>
-      <td><button onClick={delPerson}>{label}</button></td>
+      <td><button onClick={onDelete}>{label}</button></td>
     </tr>
   )
 }
@@ -42,7 +42,7 @@ const Persons = ( {persons, setPersons, msg, setMsg} ) => {
         <tbody>          
           {persons.map(person =>
             <Person key={person.id} name={person.name} number={person.number} 
-              delPerson={() =>deletePerson(person.id)} label="delete"/>
+              onDelete={() =>deletePerson(person.id)} label="delete"/>
           )}          
         </tbody>
     </table>)

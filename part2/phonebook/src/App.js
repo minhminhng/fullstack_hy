@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import Filter from './components/filter'
-import PersonForm from './components/personform'
-import Persons from './components/persons'
+import Filter from './components/Filter'
+import PersonForm from './components/Personform'
+import Persons from './components/Persons'
 import personService from './services/persons'
 import Notification from './components/notification'
 
 const App = () => {
-  const [ persons, setPersons ] = useState([])
+  const [ persons, setPersons ] = useState([])   
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setFilter ] = useState('')
@@ -114,14 +114,14 @@ const App = () => {
 
   const personsToShow = showAll 
   ? persons 
-  : persons.filter(person => person.name.toLowerCase().includes(newFilter))
+  : persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
 
   return (
     <div>
       <h2>Phonebook</h2>
       <Notification message={msg} />
       <Filter filterName={filterName} value={newFilter} handleFilterChange={handleFilterChange} />
-      <h3>add a new</h3>
+      <h3>Add a new</h3>
       
       <PersonForm text="add" onSubmit={addPerson} name={newName} number={newNumber} 
         handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>

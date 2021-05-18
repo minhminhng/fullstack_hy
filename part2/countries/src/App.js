@@ -28,7 +28,7 @@ const App = () => {
 
   // Handle show change
   const handleShowChange = (value) => {
-    setShow(true)  
+    setShow(value)  
   }
 
   const countriesToShow = countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))

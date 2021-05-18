@@ -61,44 +61,52 @@ const Countries = ( props ) => {
     const countryList = props.countries
     const [ selectedCountry, setSelect ] = useState()
     const [ weather, setWeather ] = useState({})
-    const [ loc, setLocation ] = useState()    
+    const [ loc, setLocation ] = useState()   
+    const [ cname, setName ] = useState('')
     const api_key = process.env.REACT_APP_API_KEY
 
     // Handle clicking button show
-    const handleShowClick = (name) => {       
-        setSelect(countries.filter(country => country.name === name))                        
+    const handleShowClick = (e, name) => {        
+        setSelect(countries.filter(country => country.name === name)) 
+        console.log('handle Show Click')
     }
 
-    useEffect(() => {          
-        if (selectedCountry != null){
+    useEffect(() => {       
+        console.log('effect') 
+        if (selectedCountry !== [] && selectedCountry !== undefined){
+            console.log('get weather')
             const name = selectedCountry[0].name
             const params = {
                 access_key: api_key,
                 query: name.replace(/\s/g, '')
             }
-            axios
-            //   .get(`http://api.weatherstack.com/current?${params}`)
-              .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${name.replace(/\s/g, '')}`)
-              .then(response => {
-                //   console.log(response.data)
-                // console.log(response.data.location.name)
-              setLocation(response.data.location.name)
-              console.log(response.data.current)
-              setWeather(response.data.current)            
-            })
-            props.showChange(true) // set show after set the country otherwise, selectedCountry is not defined for the 1st run
+            // axios
+            // //   .get(`http://api.weatherstack.com/current?${params}`)
+            //   .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${name.replace(/\s/g, '')}`)
+            //   .then(response => {
+            //     //   console.log(response.data)
+            //     // console.log(response.data.location.name)
+            //   setLocation(response.data.location.name)
+            // //   console.log(response.data.current)
+            //   setWeather(response.data.current)            
+            // })
+            // props.showChange(true) // set show after set the country otherwise, selectedCountry is not defined for the 1st run
         }              
     }, [selectedCountry])
     
-    // if (countryList.length === 1) {       
-    //     console.log(countryList[0])
-    //     setSelect(countryList[0])    
-    //         // return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
-    // }
+    if (countryList.length === 1) {       
+        console.log(countryList.length, countryList)
+        // props.showChange(true)
+        setSelect(countryList[0])
+        // console.log(selectedCountry)
+            // return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
+    }
+    console.log('selected',selectedCountry)
 
     const countries = props.show 
         ? selectedCountry
         : countryList
+    console.log('countries', countries)
 
     if (countries.length > 10) {
         return <div>Too many matches, specify another filter</div>
@@ -106,16 +114,17 @@ const Countries = ( props ) => {
     else if (countries.length < 1) {
         return <div>No country found</div>
     }    
-    else if (props.show) {
-        return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
-    }    
+    // else if (props.show) {
+    //     return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
+    // }    
     else {        
         return (
         <table>
             <tbody>          
             {countries.map(country => {    
+                console.log('country', country)
                 return(
-                    <tr key={country.name}>
+                    <tr key={country.name}>                        
                         <Country name={country.name}/>
                         <td><BtnShow handleClick={() => handleShowClick(country.name)} text = "show"/></td>
                     </tr>)

@@ -55,6 +55,8 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
+            setNewName('')
+            setNewNumber('')
             setMsg([1,`${persons[index].name} no longer exists`])
             setTimeout(() => {
               setMsg(null)

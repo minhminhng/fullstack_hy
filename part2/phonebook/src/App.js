@@ -49,7 +49,7 @@ const App = () => {
             setPersons(newList)
             setNewName('')
             setNewNumber('')
-            setMsg(`Updated phone number for ${updatedPerson.name}`)
+            setMsg([0, `Updated phone number for ${updatedPerson.name}`])
             setTimeout(() => {
               setMsg(null)
             }, 5000)
@@ -60,6 +60,10 @@ const App = () => {
               setMsg(null)
             }, 3000)
           }) 
+      }
+      else {
+        setNewName('')
+        setNewNumber('')
       }
     }
     else{
@@ -91,7 +95,7 @@ const App = () => {
   // Handler when name field changed
   const handleNameChange = (event) => {
     setNewName(event.target.value)
-    const index = persons.findIndex(p => p.name.toLowerCase() == newName.toLocaleLowerCase())
+    const index = persons.findIndex(p => p.name.toLocaleLowerCase() == newName.toLocaleLowerCase())
   }
   
   /// Handler when number field changed
@@ -114,7 +118,7 @@ const App = () => {
 
   const personsToShow = showAll 
   ? persons 
-  : persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
+  : persons.filter(person => person.name.toLocaleLowerCase().includes(newFilter.toLocaleLowerCase()))
 
   return (
     <div>

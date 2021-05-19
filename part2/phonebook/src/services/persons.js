@@ -20,7 +20,7 @@ const deletePerson = (id) => {
 }
 
 const update = (id, personObj) => {
-    console.log(``)
+    console.log('updating')
     const request = axios.put(`${baseUrl}/${id}`, personObj)
     return request.then(response => response.data)
 }

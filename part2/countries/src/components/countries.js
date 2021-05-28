@@ -4,6 +4,7 @@ import axios from 'axios'
 
 // Country name component
 const Country = ( {name} ) => {
+    console.log(name)
     return (        
             <td>{name}</td>            
     )
@@ -25,7 +26,7 @@ const Languages = ( {languages} ) => {
 // Flag component
 const Flag = ( {country} ) => <img src={country.flag} alt={country.name} width="200"/>
 
-const Weather = ( {city, temperature, icon, description, wind_speed, wind_dir } ) => {
+const Weather = ( {city, temperature, icon, description, wind_speed, wind_dir } ) => {     
     return (
         <div>
             <h2>Weather in {city}</h2>
@@ -58,55 +59,39 @@ const CountryInfor = ( {country, city, weather} ) => {
 
 // List of countries
 const Countries = ( props ) => {
-    const countryList = props.countries
+    const countries = props.countries
     const [ selectedCountry, setSelect ] = useState()
     const [ weather, setWeather ] = useState({})
-    const [ loc, setLocation ] = useState()   
-    const [ cname, setName ] = useState('')
-    const api_key = process.env.REACT_APP_API_KEY
+    const [ loc, setLocation ] = useState()    
 
     // Handle clicking button show
-    const handleShowClick = (e, name) => {        
-        setSelect(countries.filter(country => country.name === name)) 
-        console.log('handle Show Click')
+    const handleShowClick = (name) => {           
+        const c = countries.filter(country => 
+            country.name.toLocaleLowerCase().includes(name.toLocaleLowerCase()))
+        setSelect(c[0]) // index [0] is necessary, otherwise, the selectedCountry value 
+                        // is undefined after the first press
+        props.showChange(true)        
     }
 
     useEffect(() => {       
         console.log('effect') 
         if (selectedCountry !== [] && selectedCountry !== undefined){
-            console.log('get weather')
-            const name = selectedCountry[0].name
-            const params = {
-                access_key: api_key,
-                query: name.replace(/\s/g, '')
-            }
-            // axios
-            // //   .get(`http://api.weatherstack.com/current?${params}`)
-            //   .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${name.replace(/\s/g, '')}`)
-            //   .then(response => {
-            //     //   console.log(response.data)
-            //     // console.log(response.data.location.name)
-            //   setLocation(response.data.location.name)
-            // //   console.log(response.data.current)
-            //   setWeather(response.data.current)            
-            // })
-            // props.showChange(true) // set show after set the country otherwise, selectedCountry is not defined for the 1st run
-        }              
-    }, [selectedCountry])
-    
-    if (countryList.length === 1) {       
-        console.log(countryList.length, countryList)
-        // props.showChange(true)
-        setSelect(countryList[0])
-        // console.log(selectedCountry)
-            // return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
-    }
-    console.log('selected',selectedCountry)
+            console.log('get weather' )
+            console.log(selectedCountry)
+            const capital = selectedCountry.capital
+            const api_key = process.env.REACT_APP_API_KEY
 
-    const countries = props.show 
-        ? selectedCountry
-        : countryList
-    console.log('countries', countries)
+            axios            
+              .get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${capital}`)
+              .then(response => {
+                // console.log(response.data)
+                // console.log(response.data.location.name)
+              setLocation(response.data.location.name)
+            //   console.log(response.data.current)
+              setWeather(response.data.current)            
+            })            
+        }              
+    }, [selectedCountry])    
 
     if (countries.length > 10) {
         return <div>Too many matches, specify another filter</div>
@@ -114,15 +99,19 @@ const Countries = ( props ) => {
     else if (countries.length < 1) {
         return <div>No country found</div>
     }    
-    // else if (props.show) {
-    //     return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
-    // }    
+    else if (countries.length === 1) {
+        console.log(countries[0])
+        return <CountryInfor country={countries[0]} city={loc} weather={weather}/>
+    }
+    else if (props.show)
+    {
+        return <CountryInfor country={selectedCountry} city={loc} weather={weather}/>
+    }
     else {        
         return (
         <table>
             <tbody>          
-            {countries.map(country => {    
-                console.log('country', country)
+            {countries.map(country => {                
                 return(
                     <tr key={country.name}>                        
                         <Country name={country.name}/>
@@ -134,6 +123,5 @@ const Countries = ( props ) => {
         </table>)
     }
 }
-
 
 export default Countries

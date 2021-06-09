@@ -22,23 +22,23 @@ const App = () => {
 
   ///Handle filter value changed
   const handleFilterChange = (event) => {
+    event.preventDefault()
     setFilter(event.target.value)
     setShow(false)
   }
 
   // Handle show change
-  const handleShowChange = (value) => {
+  const handleShowChange = (value) => {    
     setShow(value)  
   }
 
-  const countriesToShow = countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()))
+  const countriesToShow = countries.filter(country => country.name.toLocaleLowerCase().includes(newFilter.toLocaleLowerCase()))
 
-  return (
-    
+  return (  
     <div>
       <h1>Countries</h1>
       <Filter value={newFilter} handleFilterChange={handleFilterChange} />     
-      <Countries countries={countriesToShow} showChange={handleShowChange} show={show} />      
+      <Countries countries={countriesToShow} filter={newFilter} showChange={handleShowChange} show={show} />      
     </div>
   )
 }

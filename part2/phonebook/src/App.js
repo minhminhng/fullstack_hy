@@ -25,7 +25,7 @@ const App = () => {
   /// Adding a new person to the database list
   const addPerson = (event) => {
     event.preventDefault()
-    const index = persons.findIndex(p => p.name.toLowerCase() == newName.toLocaleLowerCase())
+    const index = persons.findIndex(p => p.name.toLowerCase() === newName.toLocaleLowerCase())
     if (!/\S/.test(newName)) {
       // If text field is empty
       window.alert('Please add a name') 
@@ -76,6 +76,7 @@ const App = () => {
       personService
         .addPerson(personObj)
         .then(addedPerson => {
+          // console.log('name', addedPerson.name)
           setPersons(persons.concat(addedPerson))
           setNewName('')
           setNewNumber('')

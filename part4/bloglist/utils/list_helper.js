@@ -27,7 +27,6 @@ const favoriteBlog = (blogs) => {
 
 const mostBlogs = (blogs) => {
     const countBlogs = _.countBy(blogs, 'author')
-    // logger.info(countBlogs)
     const name = _.max(Object.keys(countBlogs), o => obj[o])    
     return new Object({
         author: name,
@@ -36,13 +35,17 @@ const mostBlogs = (blogs) => {
 }
 
 const mostLikes = (blogs) => {
-    const groups = _.groupBy(blogs, 'author')
-    const maxLikes = _.forEach(groups, function() {
-        _.sumBy(groups, 'likes')
+    let groups = _.groupBy(blogs,'author')
+
+    const totalLikes = _.map(groups, function(objs, key) {
+        return {
+            author: key,
+            likes: _.sumBy(objs, 'likes')
+        }      
     })
-    logger.info(maxLikes)
-    // const blog = _.max(Object.keys(countBlogs), o => obj[o])
-    return 0
+    const result = _.maxBy(totalLikes, 'likes')
+
+    return result
 }
 
 module.exports = {

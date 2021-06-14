@@ -38,7 +38,7 @@ const blogs = [
       title: "TDD harms architecture",
       author: "Robert C. Martin",
       url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
-      likes: 10,
+      likes: 2,
       __v: 0
     },
     {
@@ -51,35 +51,36 @@ const blogs = [
     }  
   ]
 
-test('dummy return one', () => {
-    const blogs = []
-    const result = listHelper.dummy(blogs)
-    expect(result).toBe(1)
-})
+// test('dummy return one', () => {
+//     const blogs = []
+//     const result = listHelper.dummy(blogs)
+//     expect(result).toBe(1)
+// })
 
 
-describe('total likes', () => {
-        test('when list has only one blog, equals the likes of that', () => {
-        const result = listHelper.totalLikes(blogs)
-        expect(result).toBe(46)
-    })
-})
+// describe('total likes', () => {
+//         test('when list has only one blog, equals the likes of that', () => {
+//         const result = listHelper.totalLikes(blogs)
+//         expect(result).toBe(46)
+//     })
+// })
 
-describe('favorite blog', () => { 
-    test('the favorite blog', () => {
-        const result = listHelper.favoriteBlog(blogs)
-        const expected = {
-            title: "Canonical string reduction",
-            author: "Edsger W. Dijkstra",
-            likes: 12,
-          }
-        expect(result).toEqual(expected)        
-    })
-})
+// describe('favorite blog', () => { 
+//     test('the favorite blog', () => {
+//         const result = listHelper.favoriteBlog(blogs)
+//         const expected = {
+//             title: "Canonical string reduction",
+//             author: "Edsger W. Dijkstra",
+//             likes: 12,
+//           }
+//         expect(result).toEqual(expected)        
+//     })
+// })
 
 describe('top blogger', () => { 
     test('author with most blogs', () => {
         const result = listHelper.mostBlogs(blogs)
+        logger.info(result)
         const expected = {
             author: "Robert C. Martin",
             blogs: 3

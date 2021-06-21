@@ -1,4 +1,4 @@
-POST http://localhost:3003/api/users/
+POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
@@ -9,18 +9,18 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3003/api/users/
+POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
     "notes":[],
-    "username": "ming",
-    "name":"Mi Ng",
-    "password": "password"
+    "username": "khiphaigio",
+    "name":"Con Khi Gio",
+    "password": "khivagio"
 }
 
 ###
-POST http://localhost:3003/api/users/
+POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
@@ -31,18 +31,18 @@ Content-Type: application/json
 }
 
 ### 
-POST http://localhost:3003/api/users/
+POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
     "notes":[],
-    "username": "giangoi",
+    "username": "giagia",
     "name":"Thu Giang",
-    "password": "password"
+    "password": "giangthu"
 }
 
 ###
-POST http://localhost:3003/api/users/
+POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {

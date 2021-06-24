@@ -1,6 +1,6 @@
-POST http://localhost:3003/api/blogs/
+POST http://localhost:3001/api/blogs/
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxpbmh0cmFuZyIsImlkIjoiNjA4OTJhYmI2MDAwZGYwYTE0ZTIyYWI2IiwiaWF0IjoxNjE5NjA1OTMxLCJleHAiOjE2MTk2MDk1MzF9.6ABvTvPfnc56SVIJbDeBvR17GN_5RajPI1tYwXB3k6o
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0NTI1NjMxLCJleHAiOjE2MjQ1MjkyMzF9.tKo6HGffB0rz_5a3g1vPNBPBD-IBdCU7fwHBytClduE
 
 {
     "title":"Khong biet nua",
@@ -11,19 +11,20 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxpb
 }
 
 ###
-POST http://localhost:3003/api/blogs/
+POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0NTI1NjMxLCJleHAiOjE2MjQ1MjkyMzF9.tKo6HGffB0rz_5a3g1vPNBPBD-IBdCU7fwHBytClduE
 
 {
     "title":"Co em doi bong vui",
     "author":"Tran Thi Thu Giang",
     "url":"https://giangoi.com/blog/",
     "likes":10000,
-    "userId": "6087e0d06d60d307f071b240"
+    "userId": "60d0e3d065308a132c4a8293"
 }
 
 ###
-POST http://localhost:3003/api/blogs/
+POST http://localhost:3001/api/blogs/
 Content-Type: application/json
 
 {

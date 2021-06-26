@@ -24,7 +24,7 @@ const App = () => {
   const handleFilterChange = (event) => {
     event.preventDefault()
     setFilter(event.target.value)
-    setShow(false)
+    setShow(false)  // reset show to not only show one country
   }
 
   // Handle show change

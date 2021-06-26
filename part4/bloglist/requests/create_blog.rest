@@ -1,6 +1,10 @@
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+<<<<<<< HEAD
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0MzAyODg5LCJleHAiOjE2MjQzMDY0ODl9.LMXoAP4f8lQFeuwBjzQu25hforlHgkiwXvzUG7JQ9sg
+=======
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0NTI1NjMxLCJleHAiOjE2MjQ1MjkyMzF9.tKo6HGffB0rz_5a3g1vPNBPBD-IBdCU7fwHBytClduE
+>>>>>>> 9994270a6215dd7fc0f31f80f37cd612ffaf6d5b
 
 {
     "title":"Khong biet nua",
@@ -13,7 +17,11 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpY
 ###
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+<<<<<<< HEAD
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0MzAyODg5LCJleHAiOjE2MjQzMDY0ODl9.LMXoAP4f8lQFeuwBjzQu25hforlHgkiwXvzUG7JQ9sg
+=======
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0NTI1NjMxLCJleHAiOjE2MjQ1MjkyMzF9.tKo6HGffB0rz_5a3g1vPNBPBD-IBdCU7fwHBytClduE
+>>>>>>> 9994270a6215dd7fc0f31f80f37cd612ffaf6d5b
 
 {
     "title":"Co em doi bong vui",
@@ -24,7 +32,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpY
 }
 
 ###
-POST http://localhost:3003/api/blogs/
+POST http://localhost:3001/api/blogs/
 Content-Type: application/json
 
 {

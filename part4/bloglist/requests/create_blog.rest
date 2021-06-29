@@ -1,34 +1,26 @@
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
-<<<<<<< HEAD
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0MzAyODg5LCJleHAiOjE2MjQzMDY0ODl9.LMXoAP4f8lQFeuwBjzQu25hforlHgkiwXvzUG7JQ9sg
-=======
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0NTI1NjMxLCJleHAiOjE2MjQ1MjkyMzF9.tKo6HGffB0rz_5a3g1vPNBPBD-IBdCU7fwHBytClduE
->>>>>>> 9994270a6215dd7fc0f31f80f37cd612ffaf6d5b
 
 {
     "title":"Khong biet nua",
     "author":"Linh Trang",
     "url":"https://giangoi.com/blog/",
     "likes":3268,
-    "userId": "60d0e3dc65308a132c4a8294"
+    "userId": "60892abb6000df0a14e22ab6"
 }
 
 ###
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
-<<<<<<< HEAD
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0MzAyODg5LCJleHAiOjE2MjQzMDY0ODl9.LMXoAP4f8lQFeuwBjzQu25hforlHgkiwXvzUG7JQ9sg
-=======
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdpYWdpYSIsImlkIjoiNjBkMGUzZDA2NTMwOGExMzJjNGE4MjkzIiwiaWF0IjoxNjI0NTI1NjMxLCJleHAiOjE2MjQ1MjkyMzF9.tKo6HGffB0rz_5a3g1vPNBPBD-IBdCU7fwHBytClduE
->>>>>>> 9994270a6215dd7fc0f31f80f37cd612ffaf6d5b
 
 {
     "title":"Co em doi bong vui",
     "author":"Tran Thi Thu Giang",
     "url":"https://giangoi.com/blog/",
     "likes":10000,
-    "userId": "60d0e3d065308a132c4a8293"
+    "userId": "60d0e281bb3b6836e85171b0"
 }
 
 ###

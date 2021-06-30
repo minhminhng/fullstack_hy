@@ -25,9 +25,9 @@ blogsRouter.post('/', userExtractor, async(request, response, next) => {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
 
-    if (body.userId != request.user) {
-      return response.status(401).json({ error: 'wrong user'})
-    }
+    // if (body.userId != request.user) {
+    //   return response.status(401).json({ error: 'wrong user'})
+    // }
 
     const user = await User.findById(request.user)
     
@@ -86,6 +86,7 @@ blogsRouter.put('/:id', userExtractor, async(request, response, next) => {
     // have to write the parameters of the body explicitly, otherwise, the update include _id
     // and will throw an exception for immutable _id
     // Option 1
+    
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,
     {      
         title: blog.title,

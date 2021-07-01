@@ -37,7 +37,7 @@ blogsRouter.post('/', userExtractor, async(request, response, next) => {
       author: body.author,
       url: body.url,
       likes: body.likes === undefined ? 0 : body.likes,
-      user: user._id
+      user: user
     })
 
     try {
@@ -80,7 +80,24 @@ blogsRouter.delete('/:id', userExtractor, async(request, response) => {
 })
 
 blogsRouter.put('/:id', userExtractor, async(request, response, next) => {
-  const blog = new Blog(request.body)  
+  const newBlog = new Blog(request.body)
+
+  const body = request.body
+  // const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!request.token || !request.user) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  const blog = await Blog.findById(request.params.id)
+  console.log(blog, 'body', body.likes)
+
+  if (blog < 0) {
+    return response.status(400).json({ error: "wrong id"})
+  }
+
+  if (blog.user != body.user) {
+    return response.status(400).json({ error: "wrong user" })
+  }
   
   try {     
     // have to write the parameters of the body explicitly, otherwise, the update include _id
@@ -89,11 +106,12 @@ blogsRouter.put('/:id', userExtractor, async(request, response, next) => {
     
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,
     {      
-        title: blog.title,
-        author: blog.author,
-        url: blog.url,
-        likes: blog.likes      
-    })
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: body.likes,
+        user: body.user
+    }, {new: true})
     //// Option 2
     // const updatedBlog = await Blog.findOneAndUpdate({_id:request.params.id},{
     //   $set:{      
@@ -102,7 +120,7 @@ blogsRouter.put('/:id', userExtractor, async(request, response, next) => {
     //       url: blog.url,
     //       likes: blog.likes
     //   } 
-    // })  
+    // }, {new: true})  
     response.json(updatedBlog)
     
   } catch (exception){

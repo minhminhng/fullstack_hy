@@ -9,10 +9,8 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  
   const [errorMsg, setErrorMsg] = useState(null)
   const [notiMsg, setNotiMsg] = useState(null)
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -22,7 +20,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -79,11 +77,11 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h1>login to application</h1>
-      <LoginForm handleSubmit={handleLogin} 
-              username={username} 
-              handleUsernameChange={({target}) => setUsername(target.value)}
-              password={password} 
-              handlePasswordChange={({target}) => setPassword(target.value)}/>            
+      <LoginForm handleSubmit={handleLogin}
+        username={username}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        password={password}
+        handlePasswordChange={({ target }) => setPassword(target.value)}/>
     </div>
   )
 
@@ -97,9 +95,8 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const createdBlog = await blogService.create(blogObject)
-        
-      setBlogs(blogs.concat(createdBlog))       
-      setNotiMsg([0,`a new blog \'${createdBlog.title}\' by ${createdBlog.author} is added`])
+      setBlogs(blogs.concat(createdBlog))
+      setNotiMsg([0,`a new blog '${createdBlog.title}' by ${createdBlog.author} is added`])
       setTimeout(() => {
         setNotiMsg(null)
       }, 5000)
@@ -108,49 +105,60 @@ const App = () => {
       setTimeout(() => {
         setErrorMsg(null)
       }, 5000)
-    }    
+    }
   }
 
   const updateBlog = async (id, blogObject) => {
     const index = blogs.findIndex(blog => blog.id === id)
-    
     try {
       const updatedBlog  = await blogService.update(id, blogObject)
       let newList = [...blogs]
-      newList[index] = { ...newList[index], likes: updatedBlog.likes }          
-      setBlogs(newList)          
-      setNotiMsg([0,`updated \'${updatedBlog.title}\'`])
+      newList[index] = { ...newList[index], likes: updatedBlog.likes }
+      setBlogs(newList)
+      setNotiMsg([0,`updated '${updatedBlog.title}'`])
       setTimeout(() => {
         setNotiMsg(null)
-      }, 2000)    
-    } catch (exception) {      
+      }, 2000)
+    } catch (exception) {
       setErrorMsg([1, exception.message])
       setTimeout(() => {
         setErrorMsg(null)
       }, 2000)
     }
   }
-    
+
+  const deleteBlog = async (id) => {
+    const toDelete = blogs.find(b => b.id === id)
+    const ok = window.confirm(`Delete ${toDelete.title}`)
+    if (ok) {
+      try {
+        await blogService.deleteBlog(id)
+        setBlogs(blogs.filter(b => b.id !== id))
+      } catch (exception) {
+        setErrorMsg([1, exception.message])
+        setTimeout(() => {
+          setErrorMsg(null)
+        }, 2000)
+      }
+    }
+  }
+
   return (
-    <div>      
+    <div>
       <h1>Blogs</h1>
       <Notification message={notiMsg} />
-      <Notification message={errorMsg} />  
+      <Notification message={errorMsg} />
       {user === null ?
         loginForm() :
-        <div> 
+        <div>
           <div>
-            {user.name} logged in 
+            {user.name} logged in
             <button onClick={handleLogout}>logout</button>
             <p></p>
             {createBlogForm()}
           </div>
-          
-          {/* {blogs.map(blog => 
-            <Blog key={blog.id} blog={blog} update={updateBlog} />
-          )} */}
           {blogs.sort((blog1, blog2) => blog2.likes - blog1.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} update={updateBlog} />
+            <Blog user={user} key={blog.id} blog={blog} update={updateBlog} deleteBlog={deleteBlog}/>
           )}
         </div>}
     </div>

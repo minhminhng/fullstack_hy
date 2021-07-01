@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const BlogForm = ( {createBlog} ) => {
+const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -34,21 +34,21 @@ const BlogForm = ( {createBlog} ) => {
     <div>
       <h2>create a new blog</h2>
       <form onSubmit={addBlog}>
-          <table>
-            <tbody>
+        <table>
+          <tbody>
             <tr>
-                <td>title:</td>
-                <td><input type="text" value={title} name="title" onChange={handleTitleChange} /></td>
+              <td>title:</td>
+              <td><input type="text" value={title} name="title" onChange={handleTitleChange} /></td>
             </tr>
             <tr>
-                <td>author:</td>
-                <td><input type="text" value={author} name="author" onChange={handleAuthorChange} /></td>
+              <td>author:</td>
+              <td><input type="text" value={author} name="author" onChange={handleAuthorChange} /></td>
             </tr>
             <tr>
-                <td>url:</td>
-                <td><input type="text" value={url} name="author" onChange={handleUrlChange} /></td>
+              <td>url:</td>
+              <td><input type="text" value={url} name="author" onChange={handleUrlChange} /></td>
             </tr>
-            </tbody>
+          </tbody>
         </table>
         <button type="submit">create</button>
       </form>

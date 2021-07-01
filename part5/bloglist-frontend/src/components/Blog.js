@@ -24,10 +24,11 @@ const Blog = ({blog, update}) => {
 
   const increaseLikes = () => {  
     update(blog.id, {
-      likes: likes + 1,
+      likes: blog.likes + 1,
       author: blog.author,
       title: blog.title,
-      url: blog.url
+      url: blog.url,
+      user: blog.user.id
     })    
     setLikes(blog.likes + 1)
   }  

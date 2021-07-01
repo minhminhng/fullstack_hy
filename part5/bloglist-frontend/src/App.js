@@ -93,18 +93,16 @@ const App = () => {
     </Togglable>
   )
 
-  const addBlog =  (blogObject) => {
+  const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
     try {
-      blogService
-        .create(blogObject)
-        .then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))       
-          setNotiMsg([0,`a new blog \'${returnedBlog.title}\' by ${returnedBlog.author} is added`])
-          setTimeout(() => {
-            setNotiMsg(null)
-            }, 5000)
-        })
+      const createdBlog = await blogService.create(blogObject)
+        
+      setBlogs(blogs.concat(createdBlog))       
+      setNotiMsg([0,`a new blog \'${createdBlog.title}\' by ${createdBlog.author} is added`])
+      setTimeout(() => {
+        setNotiMsg(null)
+      }, 5000)
     } catch (exception) {
       setErrorMsg([1, exception])
       setTimeout(() => {
@@ -115,27 +113,21 @@ const App = () => {
 
   const updateBlog = async (id, blogObject) => {
     const index = blogs.findIndex(blog => blog.id === id)
-    console.log(index)
+    
     try {
       const updatedBlog  = await blogService.update(id, blogObject)
-        
-          console.log('updated', updatedBlog)
-          let newList = [...blogs]
-          console.log(newList)
-          newList[index] = { ...newList[index], likes: updatedBlog.likes }
-          // const sortedBlogs = newList.sort((blog1, blog2) => blog2.likes - blog1.likes)
-          setBlogs(newList)
-          // setNotiMsg([0,`updated \'${returnedBlog.title}\'`])
-          // setTimeout(() => {
-          //   setNotiMsg(null)
-          //   }, 5000)      
-          //   console.log(newList)
-       
-    } catch (exception) {
-      setErrorMsg([1, exception])
+      let newList = [...blogs]
+      newList[index] = { ...newList[index], likes: updatedBlog.likes }          
+      setBlogs(newList)          
+      setNotiMsg([0,`updated \'${updatedBlog.title}\'`])
+      setTimeout(() => {
+        setNotiMsg(null)
+      }, 2000)    
+    } catch (exception) {      
+      setErrorMsg([1, exception.message])
       setTimeout(() => {
         setErrorMsg(null)
-      }, 5000)
+      }, 2000)
     }
   }
     
@@ -146,9 +138,7 @@ const App = () => {
       <Notification message={errorMsg} />  
       {user === null ?
         loginForm() :
-        <div>
-                    
-        
+        <div> 
           <div>
             {user.name} logged in 
             <button onClick={handleLogout}>logout</button>
@@ -159,7 +149,7 @@ const App = () => {
           {/* {blogs.map(blog => 
             <Blog key={blog.id} blog={blog} update={updateBlog} />
           )} */}
-          {blogs.map(blog =>
+          {blogs.sort((blog1, blog2) => blog2.likes - blog1.likes).map(blog =>
             <Blog key={blog.id} blog={blog} update={updateBlog} />
           )}
         </div>}

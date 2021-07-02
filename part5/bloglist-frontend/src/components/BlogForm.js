@@ -46,7 +46,7 @@ const BlogForm = ({ createBlog }) => {
             </tr>
             <tr>
               <td>url:</td>
-              <td><input type="text" value={url} name="author" onChange={handleUrlChange} /></td>
+              <td><input type="text" value={url} name="url" onChange={handleUrlChange} /></td>
             </tr>
           </tbody>
         </table>

@@ -44,12 +44,12 @@ const Blog = ({ user, blog, update, deleteBlog }) => {
         <button onClick={toggleVisibility}>view</button>
       </div>
 
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="blogView">
         {blog.title} {blog.author} &nbsp;
         <button onClick={toggleVisibility}>hide</button>
         <div>
           <div>{blog.url}</div>
-          <div>like {likes} &nbsp;<button onClick={increaseLikes}>like</button></div>
+          <div>likes {likes} &nbsp;<button onClick={increaseLikes}>like</button></div>
           <div>{blog.user.name}</div>
           {(blog.user.username === user.username) && <button onClick={removeBlog}>remove</button>}
         </div>

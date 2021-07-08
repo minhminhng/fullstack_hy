@@ -92,11 +92,11 @@ blogsRouter.put('/:id', userExtractor, async(request, response, next) => {
   console.log(blog, 'body', body.likes)
 
   if (blog < 0) {
-    return response.status(400).json({ error: "wrong id"})
+    return response.status(403).json({ error: "wrong id"})
   }
 
   if (blog.user != body.user) {
-    return response.status(400).json({ error: "wrong user" })
+    return response.status(403).json({ error: "wrong user" })
   }
   
   try {     

@@ -9,14 +9,14 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/api/users/
+POST http://localhost:3003/api/users/
 Content-Type: application/json
 
 {
     "notes":[],
-    "username": "khiphaigio",
+    "username": "conkhigio",
     "name":"Con Khi Gio",
-    "password": "khivagio"
+    "password": "khithichgio"
 }
 
 ###
@@ -51,3 +51,6 @@ Content-Type: application/json
     "name":"Tran Linh Trang",
     "password": "tranglinh"
 }
+
+### 
+POST http://localhost:3003/api/testing/reset

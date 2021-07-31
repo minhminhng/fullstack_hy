@@ -25,20 +25,19 @@ blogsRouter.post('/', userExtractor, async(request, response, next) => {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
 
-    // if (body.userId != request.user) {
-    //   return response.status(401).json({ error: 'wrong user'})
-    // }
+    if (body.userId != request.user) {      
+      return response.status(401).json({ error: 'wrong user'})
+    }
 
     const user = await User.findById(request.user)
     
-
     const blog = new Blog({
       title: body.title,
       author: body.author,
       url: body.url,
       likes: body.likes === undefined ? 0 : body.likes,
       user: user
-    })
+    })    
 
     try {
       const savedBlog = await blog.save()
@@ -68,14 +67,14 @@ blogsRouter.delete('/:id', userExtractor, async(request, response) => {
 
     if (blog === null) {
       return response.status(204).end()
-    }
-
+    }    
+    
     if (blog.user.toString() === request.user) {
       await Blog.findByIdAndRemove(request.params.id)      
       response.status(204).end()
     } else {
       console.log('wrong user')
-      return response.status(403).json({ error: 'wrong user'})
+      return response.status(403).json({ error: 'wrong user' })
     }
 })
 
@@ -89,13 +88,15 @@ blogsRouter.put('/:id', userExtractor, async(request, response, next) => {
   }
 
   const blog = await Blog.findById(request.params.id)
-  console.log(blog, 'body', body.likes)
+  // console.log(blog, 'body', body.likes)  
 
-  if (blog < 0) {
-    return response.status(400).json({ error: "wrong id"})
+  if (!blog) {
+    return response.status(400).json({ error: "wrong id" })
   }
 
-  if (blog.user != body.user) {
+  
+  if (blog.user != body.userId) {
+    
     return response.status(400).json({ error: "wrong user" })
   }
   

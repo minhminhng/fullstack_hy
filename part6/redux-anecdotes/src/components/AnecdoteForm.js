@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
+import { showNewNotification, removeNotification } from '../reducers/notificationReducer'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -12,7 +13,11 @@ const AnecdoteForm = () => {
     if (content !== undefined)
     {
       dispatch(createAnecdote(content))
-    }   
+      dispatch(showNewNotification(content))
+      setTimeout(() => {
+        dispatch(removeNotification())
+      }, 5000)    
+    }    
   }
 
   return (
@@ -21,7 +26,7 @@ const AnecdoteForm = () => {
       <form onSubmit={addAnecdote}>
           <div><input name="anecdote"/></div>
           <button>create</button>
-      </form>
+      </form>      
     </div>
   )
 }

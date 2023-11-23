@@ -1,34 +1,24 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "01-06-66842",
+      "name": "Mini",
+      "number": "34-677967-16",
       "id": 1
     },
     {
-      "name": "Ada Lovelace",
-      "number": "059-64-591984",
+      "name": "Dan Abramov",
+      "number": "02-23-4967",
       "id": 2
     },
     {
+      "name": "Dan Abramov",
+      "number": "34-677967-16",
+      "id": 3
+    },
+    {
       "name": "Mary Poppendieck",
-      "number": "010-26-19672",
+      "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "Jenny Harrison",
-      "number": "020-63-79298",
-      "id": 7
-    },
-    {
-      "name": "Dan Abromod",
-      "number": "31-498-64",
-      "id": 8
-    },
-    {
-      "name": "Ali Skd",
-      "number": "136-43-4634",
-      "id": 9
     }
   ]
 }

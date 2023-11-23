@@ -1,13 +1,11 @@
-import React from 'react'
-
 const Notification = ({ message }) => {
     if (message === null) {
-        return null
+      return null
     }
-
+    
     if (message[0] === 0){
         return (
-            <div className="message">
+            <div className="info">
                 {message[1]}
             </div>
         )
@@ -18,7 +16,7 @@ const Notification = ({ message }) => {
                 {message[1]}
             </div>
         )
-    }    
-}
-
-export default Notification
+    }
+  }
+  
+  export default Notification

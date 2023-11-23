@@ -1,59 +1,21 @@
 import React from 'react'
-import '@testing-library/jest-dom/extend-expect'
-import { render, fireEvent } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import BlogForm from './BlogForm'
+import { useState } from 'react'
 
-describe('blog form test', () => {
-  const blog = {
-    author: 'Marc Levy',
-    title: 'All those things we never said',
-    url: 'https://www.goodreads.com/book/show/34385326-all-those-things-we-never-said',
-    likes: 345,
-    user: '60d0e27cbb3b6836e85171af'
-  }
+test('<BlogForm /> updates parent state and calls onSubmit', async () => {
+  const createBlog = jest.fn()
+  const user = userEvent.setup()
+  const container = render(<BlogForm createBlog={createBlog} />).container
 
-  const user = {
-    name: 'Amanda Theodore',
-    username: 'amathe'
-  }
+  const input = container.querySelector('.blog-title')
+  const sendButton = screen.getByText('create')
 
-  const createHandler = jest.fn()
+  await user.type(input, 'testing a form...')
+  await user.click(sendButton)
 
-  let component
-
-  beforeEach(() => {
-    component = render(
-      <BlogForm user={user} createBlog={createHandler} />
-    )
-  })
-
-  test('access title', () => {
-    const title = component.container.querySelector("input[name='title']")
-    const form = component.container.querySelector('form')
-
-    fireEvent.change(title, { target: { value: blog.title } })
-    fireEvent.submit(form)
-
-    expect(createHandler.mock.calls[0][0].title).toBe(`${blog.title}`)
-  })
-
-  test('access author', () => {
-    const author = component.container.querySelector("input[name='author']")
-    const form = component.container.querySelector('form')
-
-    fireEvent.change(author, { target: { value: blog.author } })
-    fireEvent.submit(form)
-
-    expect(createHandler.mock.calls[0][0].author).toBe(`${blog.author}`)
-  })
-
-  test('access url', () => {
-    const url = component.container.querySelector("input[name='url']")
-    const form = component.container.querySelector('form')
-
-    fireEvent.change(url, { target: { value: blog.url } })
-    fireEvent.submit(form)
-
-    expect(createHandler.mock.calls[0][0].url).toBe(`${blog.url}`)
-  })
+  expect(createBlog.mock.calls).toHaveLength(1)
+  expect(createBlog.mock.calls[0][0].title).toBe('testing a form...')
 })

@@ -122,11 +122,11 @@ describe('test with users', () => {
   beforeEach(async() => {
     await User.deleteMany({})
 
-    const passwordHash = await bcrypt.hash('secret', 10)
-    const user = new User({username: 'root', passwordHash})
+    const passwordHash = await bcrypt.hash(helper.initialUsers.password, 10)
+    const user = new User({username: helper.initialUsers.username, passwordHash})
 
     await user.save()
-    // await Promise.all(promiseArray)  
+    
   })
 
   test('creation succeeds with a fresh username', async() => {

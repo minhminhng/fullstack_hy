@@ -1,43 +1,24 @@
+import { createSlice } from '@reduxjs/toolkit'
 
-const initial = {
-  message: '',
-  hidden: true
-}
-const notificationReducer = (state = initial, action) => {
-    console.log('state now: ', state)
-    console.log('action', action)
-    switch(action.type) {
-      case 'NEW_NOTIFICATION':
-        const newNoti = `You added '${action.data}'`
-        return { message:newNoti, hidden:false }
-      case 'VOTE_NOTIFICATION':
-        const voteNoti = `You voted '${action.data}'`        
-        return { message:voteNoti, hidden:false }
-      case 'REMOVE_NOTIFICATION':            
-        return initial
-      default:
-        return state
+const notificationSlice = createSlice({
+  name: 'notification',
+  initialState: '',
+  reducers: {
+    setMessage(state, action) {
+      return action.payload
+    }
+  }
+})
+
+export const { setMessage } = notificationSlice.actions
+
+export const setNotification = (props) => {
+    return async dispatch => {
+      dispatch(setMessage(props[0]))
+      setTimeout(() => {      
+       dispatch(setMessage(''))
+      }, props[1] * 1000)  
     }  
 }
 
-export const showNewNotification = (content) => {
-  return {
-    type: 'NEW_NOTIFICATION',
-    data: content
-  }
-}
-
-export const showVoteNotification = (content) => {
-  return {
-    type: 'VOTE_NOTIFICATION',
-    data: content
-  }
-}
-
-export const removeNotification = () => {
-  return {
-    type: 'REMOVE_NOTIFICATION'
-  }
-}
-
-export default notificationReducer
+export default notificationSlice.reducer

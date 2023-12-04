@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import About from '../components/About'
-import Footer from '../components/Footer'
-import Anecdote from '../components/Anecdote'
-import AnecdoteList from '../components/AnecdoteList'
-import CreateNew from '../components/CreateNew'
+import About from './components/About'
+import Footer from './components/Footer'
+import Anecdote from './components/Anecdote'
+import AnecdoteList from './components/AnecdoteList'
+import CreateNew from './components/CreateNew'
 import { Routes, Route, Link, useMatch } from 'react-router-dom'
 
 const App = () => {

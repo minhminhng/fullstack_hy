@@ -42,3 +42,38 @@ Content-Type: application/json
     "url":"https://www.webdesignerdepot.com/",
     "likes":1000
 }
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MmQ3ZTNjYTQyNGMyMmUyZTE0NzNiMyIsImlhdCI6MTY5NzUyODI5NX0.BKHjIdkfsR3pTW6ce4O3VY-dmgy1Sj5ROdqjGgxD4Ls
+
+{
+    "title": "Tech Crunch",
+    "author": "Tech Crunch", 
+    "url": "https://techcrunch.com/",
+    "likes": 1000
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Bright Bazaar",
+    "author": "Will Taylor",
+    "url": "https://www.brightbazaarblog.com/",
+    "likes": 7,
+    "userId": "652d7e3ca424c22e2e1473b3"
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "A Cup of Jo",
+    "author": "Joanna Goddard",
+    "url": "https://cupofjo.com/",
+    "likes": 5,
+    "userId": "652d7e3ca424c22e2e1473b3"
+}

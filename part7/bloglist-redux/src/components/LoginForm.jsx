@@ -1,43 +1,47 @@
-import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { useState } from 'react'
+import { login } from '../reducers/userReducer' 
+import { setNotification } from '../reducers/notificationReducer'
 
-const LoginForm = ({
-  handleSubmit,
-  handleUsernameChange,
-  handlePasswordChange,
-  username,
-  password
-}) => (
-  <form onSubmit={handleSubmit}>
-    <div>
-      username
-      <input
-        id='username'
-        type="text"
-        value={username}
-        name="Username"
-        onChange={handleUsernameChange}
-      />
-    </div>
-    <div>
-      password
-      <input
-        id='password'
-        type="password"
-        value={password}
-        name="Password"
-        onChange={handlePasswordChange}
-      />
-    </div>
-    <button id='login-button' type='submit'>login</button>
-  </form>
-)
+const LoginForm = () => {
+  const dispatch = useDispatch()
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired
-}
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      dispatch(login(username, password))
+    } catch (exception) {
+      dispatch(setNotification([1, exception.response.data.error, 5]))
+    }
+  }
+
+  return (
+    <form onSubmit={handleLogin}>
+      <div>
+        username
+        <input
+          id='username'
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
+        />
+      </div>
+      <div>
+        password
+        <input
+          id='password'
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button id='login-button' type='submit'>login</button>
+    </form>
+    )
+  }
 
 export default LoginForm

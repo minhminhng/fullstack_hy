@@ -49,8 +49,14 @@ export const initializeAnecdotes = () => {
 
 export const createAnecdote = content => {
   return async dispatch => {
-    const anecdote = await anecdoteService.createNew(content)
-    dispatch(appendAnecdote(anecdote))
+    try {
+      const anecdote = await anecdoteService.createNew(content)
+      dispatch(appendAnecdote(anecdote))
+    }
+    catch (exception){
+      
+    }
+    
   }
 }
 

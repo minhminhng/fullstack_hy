@@ -1,6 +1,12 @@
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { incLikes, deleteBlog } from '../reducers/blogReducer'
 
-const Blog = ({ user, blog, updateLikes, deleteBlog }) => {
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch()
+  const user = useSelector(({ user }) => {
+    return user
+  })
   const [visible, setVisible] = useState(false)
   const btnStyle = {
     background:'blue',
@@ -14,21 +20,13 @@ const Blog = ({ user, blog, updateLikes, deleteBlog }) => {
 
   const userExist = blog.user === null ? false : true
 
-  const increaseLikes = (event) => {
-    event.preventDefault()
-    updateLikes(blog.id, {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-      user: blog.user
-    })
+  const increaseLikes = async (blog) => {
+    dispatch(incLikes({...blog, likes: blog.likes + 1}))
   }
 
-  const removeBlog = (event) => {
-    event.preventDefault()
+  const removeBlog = async (id) => {
     if (window.confirm(`Removing blog ${blog.title} by ${blog.author}`)) {
-      deleteBlog(blog.id)
+      dispatch(deleteBlog(id))
     }
   }
 
@@ -42,10 +40,10 @@ const Blog = ({ user, blog, updateLikes, deleteBlog }) => {
           <div>{blog.url}</div>
           <div id='likes'>
             {blog.likes}
-            <button onClick={increaseLikes}>like</button>
+            <button onClick={() => increaseLikes(blog)}>like</button>
           </div>
           {userExist && <div>{blog.user.name} </div>}
-          {(user !== null) && (user.username === blog.user.username) && <button style={btnStyle} onClick={removeBlog}>remove</button>}
+          {(user !== null) && (user.username === blog.user.username) && <button style={btnStyle} onClick={() => removeBlog(blog.id)}>remove</button>}
         </div>
       </div>
     </div>

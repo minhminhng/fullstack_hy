@@ -61,10 +61,10 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const blog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(addedBlog))
+      setBlogs(blogs.concat(blog))
       setMessage([
         0,
-        `added a new blog ${addedBlog.title} by ${addedBlog.author}`,
+        `added a new blog ${blog.title} by ${blog.author}`,
       ])
       setTimeout(() => {
         setMessage(null)

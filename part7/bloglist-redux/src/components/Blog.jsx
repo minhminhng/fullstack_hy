@@ -20,13 +20,13 @@ const Blog = ({ blog }) => {
 
   const userExist = blog.user === null ? false : true
 
-  const increaseLikes = async (blog) => {
+  const increaseLikes = async () => {
     dispatch(incLikes({...blog, likes: blog.likes + 1}))
   }
 
-  const removeBlog = async (id) => {
+  const removeBlog = async () => {
     if (window.confirm(`Removing blog ${blog.title} by ${blog.author}`)) {
-      dispatch(deleteBlog(id))
+      dispatch(deleteBlog(blog.id))
     }
   }
 
@@ -40,10 +40,10 @@ const Blog = ({ blog }) => {
           <div>{blog.url}</div>
           <div id='likes'>
             {blog.likes}
-            <button onClick={() => increaseLikes(blog)}>like</button>
+            <button onClick={increaseLikes}>like</button>
           </div>
           {userExist && <div>{blog.user.name} </div>}
-          {(user !== null) && (user.username === blog.user.username) && <button style={btnStyle} onClick={() => removeBlog(blog.id)}>remove</button>}
+          {(user !== null) && (user.username === blog.user.username) && <button style={btnStyle} onClick={removeBlog}>remove</button>}
         </div>
       </div>
     </div>

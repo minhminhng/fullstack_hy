@@ -61,7 +61,6 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const blog = await blogService.create(blogObject)
-      const addedBlog = { ...blog, user: user }
       setBlogs(blogs.concat(addedBlog))
       setMessage([
         0,

@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateBlog, removeBlog } from '../request'
 
-const Blog = ({ user, blog, updateLikes, deleteBlog }) => {
+const Blog = ({ user, blog }) => {
+  const queryClient = useQueryClient()
   const [visible, setVisible] = useState(false)
   const btnStyle = {
     background:'blue',
@@ -14,21 +17,43 @@ const Blog = ({ user, blog, updateLikes, deleteBlog }) => {
 
   const userExist = blog.user === null ? false : true
 
-  const increaseLikes = (event) => {
-    event.preventDefault()
-    updateLikes(blog.id, {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-      user: blog.user
-    })
+  const newLikeMutation = useMutation({
+    mutationFn: updateBlog,
+    onSuccess: (blog) => {
+      // const blogs = queryClient.getQueryData({ queryKey: ['blogs'] })
+      // queryClient.setQueryData({ queryKey: ['blogs'] }, blogs.map(b => (b.id === id ? blog : b )).sort((b1, b2) => b2.likes - b1.likes))
+      queryClient.invalidateQueries({ queryKey: ['blogs']})
+    }
+  })
+
+  const increaseLikes = async () => {
+    try {
+      newLikeMutation.mutate({ ...blog, likes: blog.likes + 1 })
+    } catch (exception) {
+      dispatchNotification({ type: "SET", payload: [1, exception.response.data.error]})
+      setTimeout(() => {      
+        dispatchNotification({ type: "CLEAR" })}, 5000)
+    }
   }
 
-  const removeBlog = (event) => {
-    event.preventDefault()
+  const deleteMutation = useMutation({
+    mutationFn: removeBlog,
+    onSuccess: () => {
+      // const blogs = queryClient.getQueryData({ queryKey: ['blogs'] })
+      // queryClient.setQueryData({ queryKey: ['blogs'] }, blogs.map(b => (b.id === id ? blog : b )).sort((b1, b2) => b2.likes - b1.likes))
+      queryClient.invalidateQueries({ queryKey: ['blogs']})
+    }
+  })
+
+  const deleteBlog = () => {
     if (window.confirm(`Removing blog ${blog.title} by ${blog.author}`)) {
-      deleteBlog(blog.id)
+      try {
+        deleteMutation.mutate(blog.id)
+      } catch (exception) {
+        dispatchNotification({ type: "SET", payload: [1, exception.response.data.error]})
+        setTimeout(() => {      
+          dispatchNotification({ type: "CLEAR" })}, 5000)
+      }
     }
   }
 
@@ -45,7 +70,7 @@ const Blog = ({ user, blog, updateLikes, deleteBlog }) => {
             <button onClick={increaseLikes}>like</button>
           </div>
           {userExist && <div>{blog.user.name} </div>}
-          {(user !== null) && (user.username === blog.user.username) && <button style={btnStyle} onClick={removeBlog}>remove</button>}
+          {(user !== null) && (user.username === blog.user.username) && <button style={btnStyle} onClick={deleteBlog}>remove</button>}
         </div>
       </div>
     </div>

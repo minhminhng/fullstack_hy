@@ -1,138 +1,94 @@
-import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
-import Notification from "./components/Notification";
-import LoginForm from "./components/LoginForm";
-import BlogForm from "./components/BlogForm";
-import Togglable from "./components/Togglable";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef } from 'react'
+
+import { getAll, createBlog } from './request'
+import { useNotificationDispatch } from './contexts/NotificationContext'
+
+import Blog from './components/Blog'
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
+import { useUser, useUserDispatch } from './contexts/UserContext'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(null);
-  const [user, setUser] = useState(null);
+  const queryClient = useQueryClient()
+  const user = useUser()
+  const dispatchUser = useUserDispatch()
+  const dispatchNotification = useNotificationDispatch()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      setBlogs(blogs);
-    });
-  }, []);
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      dispatchUser({ type: "SET", payload:JSON.parse(loggedUserJSON) })
     }
-  }, []);
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      setUser(user);
-      blogService.setToken(user.token);
-      setUsername("");
-      setPassword("");
-    } catch (exception) {
-      setMessage([1, "Wrong credentials"]);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    }
-  };
+  }, [])
 
   const handleLogout = () => {
+    dispatchUser({ type: "RESET" })
     window.localStorage.removeItem("loggedBlogappUser");
-    setUser(null);
-  };
+  }
 
-  const blogFormRef = useRef();
+  const blogFormRef = useRef()
 
-  const addBlog = async (blogObject) => {
-    blogFormRef.current.toggleVisibility();
-    try {
-      const blog = await blogService.create(blogObject);
-      const addedBlog = { ...blog, user: user };
-      setBlogs(blogs.concat(addedBlog));
-      setMessage([
-        0,
-        `added a new blog ${addedBlog.title} by ${addedBlog.author}`,
-      ]);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    } catch (exception) {
-      setMessage([1, exception.response.data.error]);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+  const newBlogMutation = useMutation({
+    mutationFn: createBlog,
+    onSuccess: (newBlog) => {
+      // const blogs = queryClient.getQueryData('blogs')
+      // queryClient.setQueryData('blogs', blogs.concat(newBlog))
+      queryClient.invalidateQueries({ queryKey: ['blogs']})
     }
-  };
+  })
 
-  const updateLikes = async (id, blogObject) => {
+  const addBlog = (blog) => {
+    blogFormRef.current.toggleVisibility()
     try {
-      const blog = await blogService.update(id, blogObject);
-      let updateBlogs = blogs.map((b) => (b.id === id ? blog : { ...b }));
-      setBlogs(updateBlogs);
+      newBlogMutation.mutate(blog)      
+      dispatchNotification({ type: "SET", payload: [0, `added a new blog ${blog.title} by ${blog.author}`] })
+      setTimeout(() => {      
+        dispatchNotification({ type: "CLEAR" })}, 5000)
     } catch (exception) {
-      setMessage([1, exception.response.data.error]);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      dispatchNotification({ type: "SET", payload: [1, exception.response.data.error]})
+      setTimeout(() => {      
+        dispatchNotification({ type: "CLEAR" })}, 5000)
     }
-  };
+  }
 
-  const deleteBlog = async (id) => {
-    try {
-      await blogService.remove(id);
-      let remainedBlogs = blogs.filter((b) => b.id !== id);
-      setBlogs(remainedBlogs);
-    } catch (exception) {
-      setMessage([1, exception.response.data.error]);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    }
-  };
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: getAll,
+    refetchOnWindowFocus: false
+  })
+  
+  const blogs = result.data
+
+  if ( result.isLoading ) {
+    return <div>loading data...</div>
+  }
 
   const blogForm = () => (
     <Togglable
-      buttonLabelShow="create new blog"
-      buttonLabelHide="cancel"
+      buttonLabelShow='create new blog'
+      buttonLabelHide='cancel'
       ref={blogFormRef}
     >
       <BlogForm createBlog={addBlog} />
     </Togglable>
-  );
+  )
 
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} />
+      <Notification />
       {!user && (
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
+        <LoginForm />
       )}
 
       {user && (
         <div>
           <p>
             {user.name} logged in
-            <button onClick={() => handleLogout()} type="submit">
+            <button onClick={() => handleLogout()}>
               logout
             </button>
           </p>
@@ -147,12 +103,10 @@ const App = () => {
             key={blog.id}
             user={user}
             blog={blog}
-            updateLikes={updateLikes}
-            deleteBlog={deleteBlog}
           />
         ))}
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

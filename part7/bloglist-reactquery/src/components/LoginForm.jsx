@@ -1,43 +1,53 @@
-import PropTypes from 'prop-types'
+import { useState } from 'react'
+import { useUserDispatch } from '../contexts/UserContext'
+import { login } from '../request'
+import { useNotificationDispatch } from '../contexts/NotificationContext'
 
-const LoginForm = ({
-  handleSubmit,
-  handleUsernameChange,
-  handlePasswordChange,
-  username,
-  password
-}) => (
-  <form onSubmit={handleSubmit}>
-    <div>
-      username
-      <input
-        id='username'
-        type="text"
-        value={username}
-        name="Username"
-        onChange={handleUsernameChange}
-      />
-    </div>
-    <div>
-      password
-      <input
-        id='password'
-        type="password"
-        value={password}
-        name="Password"
-        onChange={handlePasswordChange}
-      />
-    </div>
-    <button id='login-button' type='submit'>login</button>
-  </form>
-)
+const LoginForm = () => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const dispatchUser = useUserDispatch()
+    const dispatchNotification = useNotificationDispatch()
 
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired
-}
+    const handleLogin = async (event) => {
+      event.preventDefault()
+  
+      try {
+        const user = await login({ username, password }) 
+        dispatchUser({ type: "SET", payload: user })
+        window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));       
+      } catch (exception) {
+        dispatchNotification({ type: "SET", payload: [1, exception.response.data.error]})
+        setTimeout(() => {      
+          dispatchNotification({ type: "CLEAR" })}, 5000)
+      }
+    }
+
+    return (
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+          <input
+            id='username'
+            type="text"
+            value={username}
+            name="username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
+          password
+          <input
+            id='password'
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button id='login-button' type='submit'>login</button>
+      </form>
+    )
+  }
 
 export default LoginForm

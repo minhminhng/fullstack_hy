@@ -1,19 +1,23 @@
-import { useState } from 'react'
+import { useState, forwardRef } from 'react'
 import { useDispatch} from 'react-redux'
-import { createBlog } from '../reducers/blogReducer'
+import { createBlog } from '../reducers/blogsReducer'
+import { useNavigate } from 'react-router-dom'
 
-const BlogForm = () => {
+const BlogForm = forwardRef((props, ref) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const addBlog = async (event) => {
+    ref.current.toggleVisibility()
     event.preventDefault()
     dispatch(createBlog({ title, author, url }))
     setTitle('')
     setAuthor('')
     setUrl('')
+    navigate('/')
   }
 
   return (
@@ -55,6 +59,6 @@ const BlogForm = () => {
         <button id='create-button' type='submit'>create</button>
       </form>
     </div>)
-}
+})
 
 export default BlogForm

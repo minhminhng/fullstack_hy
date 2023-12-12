@@ -11,7 +11,6 @@ const blogSlice = createSlice({
       return state.map(blog => blog.id !== changedBlog.id ? blog : changedBlog).sort((b1, b2) => b2.likes - b1.likes)
     },    
     appendBlog(state, action) {
-      console.log(action.payload)
       state.push(action.payload)
     },
     setBlogs(state, action) {
@@ -20,11 +19,15 @@ const blogSlice = createSlice({
     removeBlog(state, action) {
       const removedBlog = action.payload
       return state.filter(blog => blog.id !== removedBlog).sort((b1, b2) => b2.likes - b1.likes)
+    },
+    updateComment(state, action) {
+      const commentedBlog = action.payload
+      return state.map(blog => blog.id !== commentedBlog.id ? blog : commentedBlog)
     }
   }
 })
 
-export const { changeLikes, appendBlog, setBlogs, removeBlog } = blogSlice.actions
+export const { changeLikes, appendBlog, setBlogs, removeBlog, updateComment } = blogSlice.actions
 export const initializeBlogs = () => {
   return async dispatch => {
     const blogs = await blogService.getAll()
@@ -40,6 +43,7 @@ export const createBlog = newBlog => {
       dispatch(setNotification([0, `Added '${blog.title}' by ${blog.author}`, 10]))
     }
     catch (exception) {
+      console.log(exception)
       dispatch(setNotification([1, exception.response.data.error, 5]))
     }
   }
@@ -57,6 +61,19 @@ export const incLikes = (blog) => {
   }
 }
 
+export const addComment = (id, comment) => {
+  return async dispatch => {
+    try {
+      const commentedBlog = await blogService.createComment(id, {comment})
+      dispatch(updateComment(commentedBlog))
+    }
+    catch (exception) {
+      console.log(exception)
+      dispatch(setNotification([1, exception.response.data.error, 5]))
+    }
+  }
+}
+
 export const deleteBlog = id => {
   return async dispatch => {
     try {
@@ -64,7 +81,13 @@ export const deleteBlog = id => {
       dispatch(removeBlog(id))
     }
     catch (exception) {
-      dispatch(setNotification([1, exception.response.data.error, 5]))
+      const data = exception.response.data.error
+      if (data) {
+        dispatch(setNotification([1, exception.response.data.error, 5]))
+      }
+      else {
+        dispatch(setNotification([1, exception.message, 5]))
+      }
     }
   }
 }

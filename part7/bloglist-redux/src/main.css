@@ -46,3 +46,7 @@ td {
   padding-right: 5px;
   min-width: 60px;
 }
+
+input[name="comment"] {
+  width: 300px;
+}

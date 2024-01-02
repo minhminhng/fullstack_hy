@@ -96,7 +96,7 @@ const typeDefs = `
     title: String!
     author: String!
     genres: [String]
-    published: Int!
+    published: Int
     id: ID!
   }
   type Author {
@@ -174,6 +174,7 @@ const resolvers = {
           }
         })
       }
+
       const book = { ...args, id: uuid() }
       books = books.concat(book)
 

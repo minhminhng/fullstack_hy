@@ -1,4 +1,6 @@
-const Authors = ({ show, authors }) => {
+import BirthYear from "./BirthYear"
+
+const Authors = ({ show, authors, setError }) => {
   if (!show) {
     return null
   }
@@ -22,6 +24,9 @@ const Authors = ({ show, authors }) => {
           ))}
         </tbody>
       </table>
+
+      <h2>Set birthyear</h2>
+      <BirthYear authors={authors} setError={setError}/>
     </div>
   )
 }

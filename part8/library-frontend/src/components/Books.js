@@ -1,4 +1,4 @@
-const Books = ({show, books }) => {
+const Books = ({ show, books }) => {
   if (!show) {
     return null
   }

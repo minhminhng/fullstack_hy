@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client'
 
 import Select from 'react-select'
 
-import { ALL_QUERY, SET_BIRTHYEAR } from '../queries'
+import { ALL_AUTHORS, SET_BIRTHYEAR } from '../queries'
 
 const BirthYear = ({ authors, setError }) => {
   const [year, setYear] = useState('')
@@ -15,8 +15,8 @@ const BirthYear = ({ authors, setError }) => {
       )
   })
 
-  const [setBirthYear] = useMutation(SET_BIRTHYEAR, {
-    refetchQueries: [ { query: ALL_QUERY } ],
+  const [ setBirthYear ] = useMutation(SET_BIRTHYEAR, {
+    refetchQueries: [ { query: ALL_AUTHORS} ],
     onError: (error) => {
       const messages = error.graphQLErrors.map(e => e.message).join('\n')
       setError(messages)

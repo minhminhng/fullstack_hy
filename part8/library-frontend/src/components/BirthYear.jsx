@@ -5,15 +5,9 @@ import Select from 'react-select'
 
 import { ALL_AUTHORS, SET_BIRTHYEAR } from '../queries'
 
-const BirthYear = ({ authors, setError }) => {
+const BirthYear = ({ show, authors, setError }) => {
   const [year, setYear] = useState('')
   const [selectedAuthor, setSelectedAuthor] = useState("Select an author");
-
-  const options = authors.map(a => {
-      return (
-        { value: a.name, label: a.name }
-      )
-  })
 
   const [ setBirthYear ] = useMutation(SET_BIRTHYEAR, {
     refetchQueries: [ { query: ALL_AUTHORS} ],
@@ -23,6 +17,15 @@ const BirthYear = ({ authors, setError }) => {
     }
   })
 
+  if (!show) {
+    return null
+  }
+
+  const options = authors.map(a => {
+    return (
+      { value: a.name, label: a.name }
+    )
+  })  
 
   const submit = async (event) => {
     event.preventDefault()
@@ -36,7 +39,7 @@ const BirthYear = ({ authors, setError }) => {
 
   return (
     <div>
-      
+      <h2>Set birthyear</h2>
       <form onSubmit={submit}>
       <Select
           defaultInputValue={selectedAuthor}

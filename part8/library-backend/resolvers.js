@@ -4,16 +4,34 @@ const jwt = require('jsonwebtoken')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
+const Dataloader = require('dataloader')
 
 require('dotenv').config()
 const password = process.env.PASSWORD
 
 const pubsub = new PubSub()
 
+const bookLoader = new Dataloader(async (ids) => {
+  const books = ids.map(id => Book.find({ author : id}))  
+  return books
+})
+
 const resolvers = {
   Query: {
     authorCount: async () => Author.collection.countDocuments(),
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      const authors = await Author.find({})  
+      const authorsWithBooks = await Promise.all(authors.map(async(author) => {
+        const authorBooks = await bookLoader.load(author.id)
+        return {
+          id: author.id,
+          name: author.name,
+          born: author.born,
+          bookCount: authorBooks.length
+        }
+      }))
+      return authorsWithBooks
+    },
     bookCount: async () => Book.collection.countDocuments(),
     allBooks: async (root, args) => {
       if (!args.author && !args.genre) {
@@ -145,12 +163,6 @@ const resolvers = {
       }
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET)}
-    }
-  },    
-  Author: {
-    bookCount: async (root) => {
-      const books = await Book.find({ author: root.id })
-      return books.length
     }
   },
   Subscription: {

@@ -1,0 +1,17 @@
+{
+  "name": "calculate_bmi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ts-node": "ts-node",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "calculateBmi": "ts-node -- bmiCalculator.ts",
+    "calculateExercises": "ts-node -- exerciseCalculator.ts"
+  },
+  "author": "Minh Nguyen",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.1"
+  }
+}

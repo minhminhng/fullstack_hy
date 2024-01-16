@@ -1,3 +1,24 @@
+interface Course {
+  name: string;
+  exerciseCount: number;
+}
+
+const Header = ({ name }: { name: string }) => {
+  return  <h1>{name}</h1>;
+}
+
+const Content = ({ courses }: {courses: Course[]}) => {
+  return (
+    <div>
+      {courses.map(c => <p key={c.name}> {c.name} {c.exerciseCount}</p>)}
+    </div>
+  )
+}
+
+const Total = ({ courses }: {courses: Course[]}) => {
+  const totalExercises = courses.reduce((sum, part) => sum + part.exerciseCount, 0);
+  return <p>Number of exercises {totalExercises}</p>
+}
 const App = () => {
   const courseName = "Half Stack application development";
   const courseParts = [
@@ -15,23 +36,11 @@ const App = () => {
     }
   ];
 
-  const totalExercises = courseParts.reduce((sum, part) => sum + part.exerciseCount, 0);
-
   return (
     <div>
-      <h1>{courseName}</h1>
-      <p>
-        {courseParts[0].name} {courseParts[0].exerciseCount}
-      </p>
-      <p>
-        {courseParts[1].name} {courseParts[1].exerciseCount}
-      </p>
-      <p>
-        {courseParts[2].name} {courseParts[2].exerciseCount}
-      </p>
-      <p>
-        Number of exercises {totalExercises}
-      </p>
+      <Header name={courseName} />
+      <Content courses={courseParts} />
+      <Total courses={courseParts} />
     </div>
   );
 };

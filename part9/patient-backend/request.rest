@@ -1,0 +1,11 @@
+###
+POST http://localhost:3001/api/patients/
+Content-Type: application/json
+
+{
+    "name": "Alexandra Johnson",
+    "dateOfBirth": "1992-12-12",
+    "ssb":"121292-3116",
+    "gender": "female",
+    "occupation": "Teacher"
+}

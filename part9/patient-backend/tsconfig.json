@@ -5,6 +5,7 @@
 
     /* Modules */
     "module": "commonjs",                             /* Specify what module code is generated. */
+    "resolveJsonModule": true,
  
     /* Emit */
     "outDir": "./build/",                                   /* Specify an output folder for all emitted files. */

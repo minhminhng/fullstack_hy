@@ -1,25 +1,37 @@
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
 interface CoursePartBase {
-  name: string;
-  exerciseCount: number;
+  name: string,
+  exerciseCount: number
 }
 
-interface CoursePartBasic extends CoursePartBase {
-  description: string;
+interface CourseWithDescription extends CoursePartBase {
+  description: string,
+}
+
+interface CoursePartBasic extends CourseWithDescription {
   kind: "basic"
 }
 
 interface CoursePartGroup extends CoursePartBase {
-  groupProjectCount: number;
+  groupProjectCount: number,
   kind: "group"
 }
 
-interface CoursePartBackground extends CoursePartBase {
-  description: string;
-  backgroundMaterial: string;
+interface CoursePartBackground extends CourseWithDescription {
+  backgroundMaterial: string,
   kind: "background"
 }
 
-type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground;
+interface CoursePartSpecial extends CourseWithDescription {
+  requirements: string[],
+  kind: "special"
+}
+
+type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground | CoursePartSpecial;
 
 const courseParts: CoursePart[] = [
   {
@@ -53,26 +65,66 @@ const courseParts: CoursePart[] = [
     description: "a hard part",
     kind: "basic",
   },
+  {
+    name: "Backend development",
+    exerciseCount: 21,
+    description: "Typing the backend",
+    requirements: ["nodejs", "jest"],
+    kind: "special"
+  }
 ];
-interface Course {
-  name: string;
-  exerciseCount: number;
-}
 
 const Header = ({ name }: { name: string }) => {
   return  <h1>{name}</h1>;
 }
 
-const Content = ({ courses }: {courses: Course[]}) => {
+const Part = ({ part }: { part: CoursePart }) => {
+  switch (part.kind) {
+    case "basic":
+      return (
+        <div>
+          <h3>{part.name} {part.exerciseCount}</h3>
+          <i>{part.description}</i>
+        </div>
+      )
+    case "group":
+      return (
+        <div>
+          <h3>{part.name} {part.exerciseCount}</h3>
+          <div>project exercises {part.groupProjectCount}</div>
+        </div>
+      )
+    case "background":
+      return (
+        <div>
+          <h3>{part.name} {part.exerciseCount}</h3>
+          <i>{part.description}</i>
+          <div>submit to {part.backgroundMaterial}</div>
+        </div>
+      )
+    case "special":
+      return (
+        <div>
+          <h3>{part.name} {part.exerciseCount}</h3>
+          <i>{part.description}</i>
+          <div>required skills: {part.requirements.join(', ')}</div>
+        </div>
+      )
+    default:
+      return assertNever(part);
+  }
+}
+
+const Content = ({ parts }: {parts: CoursePart[]}) => {
   return (
     <div>
-      {courses.map(c => <p key={c.name}> {c.name} {c.exerciseCount}</p>)}
+      {parts.map(p => <Part key={p.name} part={p} />)}
     </div>
   )
 }
 
-const Total = ({ courses }: {courses: Course[]}) => {
-  const totalExercises = courses.reduce((sum, part) => sum + part.exerciseCount, 0);
+const Total = ({ parts }: {parts: CoursePart[]}) => {
+  const totalExercises = parts.reduce((sum, part) => sum + part.exerciseCount, 0);
   return <p>Number of exercises {totalExercises}</p>
 }
 const App = () => {
@@ -81,8 +133,8 @@ const App = () => {
   return (
     <div>
       <Header name={courseName} />
-      <Content courses={courseParts} />
-      <Total courses={courseParts} />
+      <Content parts={courseParts} />
+      <Total parts={courseParts} />
     </div>
   );
 };

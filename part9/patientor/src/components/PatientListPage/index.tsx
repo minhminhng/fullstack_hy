@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
+import { Link } from "react-router-dom";
 import axios from 'axios';
+
+import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 
 import { PatientFormValues, Patient } from "../../types";
 import AddPatientModal from "../AddPatientModal";
-
 import HealthRatingBar from "../HealthRatingBar";
-
 import patientService from "../../services/patients";
-
 interface Props {
   patients : Patient[]
   setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
+  setPatient: React.Dispatch<React.SetStateAction<Patient | null>>
 }
 
-const PatientListPage = ({ patients, setPatients } : Props ) => {
+const PatientListPage = ({ patients, setPatients, setPatient } : Props ) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
@@ -26,24 +26,37 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     setError(undefined);
   };
 
+  const resolveError = (e: unknown) => {
+    if (axios.isAxiosError(e)) {
+      if (e?.response?.data && typeof e?.response?.data === "string") {
+        const message = e.response.data.replace('Something went wrong. Error: ', '');
+        console.error(message);
+        setError(message);
+      } else {
+        setError("Unrecognized axios error");
+      }
+    } else {
+      console.error("Unknown error", e);
+      setError("Unknown error");
+    }
+  };
+
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
       const patient = await patientService.create(values);
       setPatients(patients.concat(patient));
       setModalOpen(false);
     } catch (e: unknown) {
-      if (axios.isAxiosError(e)) {
-        if (e?.response?.data && typeof e?.response?.data === "string") {
-          const message = e.response.data.replace('Something went wrong. Error: ', '');
-          console.error(message);
-          setError(message);
-        } else {
-          setError("Unrecognized axios error");
-        }
-      } else {
-        console.error("Unknown error", e);
-        setError("Unknown error");
-      }
+      resolveError(e);
+    }
+  };
+
+  const selectPatient = async(id: string) => {
+    try {
+      const patient = await patientService.getById(id);
+      setPatient(patient);
+    } catch (e: unknown) {
+      resolveError(e);
     }
   };
 
@@ -60,7 +73,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
             <TableCell>Name</TableCell>
             <TableCell>Gender</TableCell>
             <TableCell>Occupation</TableCell>
-            <TableCell>Health Rating</TableCell>
+            <TableCell>Health Rating</TableCell>            
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,6 +84,10 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
               <TableCell>{patient.occupation}</TableCell>
               <TableCell>
                 <HealthRatingBar showText={false} rating={1} />
+              </TableCell>
+              <TableCell>
+                <Button component={Link} to={`/patients/${patient.id}`} variant="contained" 
+                        onClick={() => selectPatient(patient.id)}>show</Button>
               </TableCell>
             </TableRow>
           ))}

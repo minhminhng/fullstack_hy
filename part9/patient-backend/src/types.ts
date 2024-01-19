@@ -1,7 +1,7 @@
 export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHER = 'other'  
+  Male = 'male',
+  Female = 'female',
+  Other = 'other'  
 }
 
 export interface Diagnosis {
@@ -11,7 +11,7 @@ export interface Diagnosis {
 }
 
 interface BaseEntry {
-  ids: string;
+  id: string;
   description: string;
   date: string;
   specialist: string;
@@ -26,7 +26,7 @@ export enum HealthCheckRating {
 }
 
 interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
+  type: 'Hospital';
   discharge: {
     date: string;
     criteria: string;
@@ -34,16 +34,16 @@ interface HospitalEntry extends BaseEntry {
 }
 
 interface OccupationalHealthcareEntry extends BaseEntry {
-  type: "OccupationalHealthcare";
+  type: 'OccupationalHealthcare';
   employerName: string;
-  sickLeave: {
+  sickLeave?: {
     startDate: string;
     endDate: string;
   }
 }
 
 interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
+  type: 'HealthCheck';
   healthCheckRating: HealthCheckRating;
 }
 
@@ -67,6 +67,6 @@ export interface Patient {
   ssn: string;
   gender: Gender;
   occupation: string;
-  entries: Entry[];
+  entries?: Entry[];
 }
 

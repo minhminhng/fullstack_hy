@@ -11,10 +11,9 @@ import patientService from "../../services/patients";
 interface Props {
   patients : Patient[]
   setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
-  setPatient: React.Dispatch<React.SetStateAction<Patient | null>>
 }
 
-const PatientListPage = ({ patients, setPatients, setPatient } : Props ) => {
+const PatientListPage = ({ patients, setPatients } : Props ) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
@@ -51,15 +50,6 @@ const PatientListPage = ({ patients, setPatients, setPatient } : Props ) => {
     }
   };
 
-  const selectPatient = async(id: string) => {
-    try {
-      const patient = await patientService.getById(id);
-      setPatient(patient);
-    } catch (e: unknown) {
-      resolveError(e);
-    }
-  };
-
   return (
     <div className="App">
       <Box>
@@ -86,8 +76,7 @@ const PatientListPage = ({ patients, setPatients, setPatient } : Props ) => {
                 <HealthRatingBar showText={false} rating={1} />
               </TableCell>
               <TableCell>
-                <Button component={Link} to={`/patients/${patient.id}`} variant="contained" 
-                        onClick={() => selectPatient(patient.id)}>show</Button>
+                <Button component={Link} to={`/patients/${patient.id}`} variant="contained" >show</Button>
               </TableCell>
             </TableRow>
           ))}

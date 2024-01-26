@@ -45,6 +45,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
       dateOfBirth,
       gender
     });
+    onCancel();
   };
 
   return (

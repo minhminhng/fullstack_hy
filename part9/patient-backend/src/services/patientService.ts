@@ -1,5 +1,5 @@
 import patientData from '../../data/patients';
-import { Patient, NonSensitivePatientData, NewPatient, Entry } from '../types';
+import { Patient, NonSensitivePatientData, NewPatient, Entry, HealthCheckRating } from '../types';
 import {v4 as uuidv4} from 'uuid';
 
 const patients: Patient[] = patientData;
@@ -36,8 +36,27 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
-const addEntry = (patientId: string, entry: Entry): Patient => {
-  console.log(patientId);
+const addEntry = (patientId: string, entry: Entry): Entry => {
+  switch (entry.type) {
+    case "Hospital":
+      if (!entry.discharge || !entry.discharge.date || !entry.discharge.criteria) {
+        throw new Error ('Missing discharge parameter for entry type Hospital');
+      }
+      break;
+    case "OccupationalHealthcare":
+      if (!entry.employerName || entry.employerName === '') {
+        throw new Error ('Missing employer parameter for entry type OccupationalHealthcare');
+      }
+      break;
+    case "HealthCheck":
+      if (entry.healthCheckRating > HealthCheckRating.CriticalRisk || entry.healthCheckRating < HealthCheckRating.Healthy 
+        || isNaN(entry.healthCheckRating)) {
+        throw new Error(`Value of healthCheckRating incorrect: ${entry.healthCheckRating}`);
+      }
+      break;
+    default:
+      throw new Error('Undefined entry type');
+  }
   const patient = patients.find(p => p.id === patientId);
   const newEntry: Entry = { 
     ...entry,
@@ -46,10 +65,7 @@ const addEntry = (patientId: string, entry: Entry): Patient => {
   
   if (patient) {
     patient.entries?.push(newEntry);
-    return {
-      ...patient,
-      entries: [...patient.entries || [], { ...entry, id: uuidv4()}]
-    };    
+    return newEntry;    
   }
   throw new Error('Patient not found!'); 
 };

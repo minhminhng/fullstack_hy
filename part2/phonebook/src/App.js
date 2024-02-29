@@ -53,6 +53,12 @@ const App = () => {
               .then(returnedPerson => 
                 setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson ))
               )
+              .catch(error => {
+                setMsg([1, error.response.data.error])
+                setTimeout(() => {
+                  setMsg(null)
+                }, 5000)
+              })
           }
         }      
       }

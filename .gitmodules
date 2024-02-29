@@ -1,3 +1,4 @@
 [submodule "part3"]
 	path = part3
-	url = https://github.com/minhminhng/fullstack_part3.git
+	url = https://github.com/minhminhng/fullstack-part3.git
+	branch = main

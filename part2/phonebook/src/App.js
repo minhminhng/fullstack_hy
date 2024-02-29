@@ -35,25 +35,25 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    const ind = persons.findIndex(p => p.name.toLowerCase() === newName.toLowerCase())
 
-    const ind = persons.findIndex(p => p.name === newName)    
     if (newName !== ''){
       if (ind > -1) {
         if (newNumber !== persons[ind].number)
         {
           if (window.confirm(`Do you want to change phone number for ${persons[ind].name}`)) {
-          const updatedPerson = {
-            name: persons[ind].name,
-            number: newNumber,
-            id: persons[ind].id     
-          }
-          const newList = [...persons]
-          newList[ind] = updatedPerson
-          personService
-            .update(updatedPerson.id, updatedPerson)
-            .then(returnedPerson =>
-              setPersons(persons.map(p => p.id !== updatedPerson.id ? p : returnedPerson )))
+            const updatedPerson = {
+              name: persons[ind].name,
+              number: newNumber    
             }
+            const newList = [...persons]
+            newList[ind] = updatedPerson
+            personService
+              .update(persons[ind].id, updatedPerson)
+              .then(returnedPerson => 
+                setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson ))
+              )
+          }
         }      
       }
       else{
@@ -108,7 +108,7 @@ const App = () => {
       <h3>add a new</h3>
       <PersonForm newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} addPerson={addPerson} />
       <h3>Numbers</h3>
-      <Persons key={persons.id} persons={personsToShow} handleDelete={handleDelete}/>
+      <Persons persons={personsToShow} handleDelete={handleDelete}/>
     </div>
   )
 }
